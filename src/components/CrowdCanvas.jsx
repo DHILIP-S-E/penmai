@@ -35,11 +35,11 @@ export default function CrowdCanvas({ rows = 4, cols = 4 }) {
       if (direction === 1) {
         startX = -peep.width;
         endX = stage.width;
-        peep.scaleX = 0.55; // Slightly scaled down for styling
+        peep.scaleX = -0.55; // Face right when walking right
       } else {
         startX = stage.width + peep.width;
         endX = -peep.width;
-        peep.scaleX = -0.55;
+        peep.scaleX = 0.55; // Face left when walking left
       }
 
       peep.x = startX;
@@ -112,33 +112,95 @@ export default function CrowdCanvas({ rows = 4, cols = 4 }) {
     const availablePeeps = [];
     const crowd = [];
 
-    const makeWhiteTransparent = (image) => {
-      const tempCanvas = document.createElement("canvas");
-      tempCanvas.width = image.naturalWidth;
-      tempCanvas.height = image.naturalHeight;
-      const tempCtx = tempCanvas.getContext("2d");
-      tempCtx.drawImage(image, 0, 0);
+    const removeBackgroundOfCrop = (sourceImage, sx, sy, sw, sh) => {
+      try {
+        const cropCanvas = document.createElement("canvas");
+        cropCanvas.width = sw;
+        cropCanvas.height = sh;
+        const cropCtx = cropCanvas.getContext("2d");
+        if (!cropCtx) return null;
 
-      const imgData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-      const data = imgData.data;
+        // Draw the cropped character from the source image
+        cropCtx.drawImage(sourceImage, sx, sy, sw, sh, 0, 0, sw, sh);
 
-      // Loop through pixels and set alpha=0 for white/near-white pixels
-      for (let i = 0; i < data.length; i += 4) {
-        const r = data[i];
-        const g = data[i + 1];
-        const b = data[i + 2];
+        const imgData = cropCtx.getImageData(0, 0, sw, sh);
+        const data = imgData.data;
 
-        // Match solid white and very light background pixels
-        if (r > 240 && g > 240 && b > 240) {
-          data[i + 3] = 0; // Transparent
+        // Flood fill from the borders of the cropped image
+        const visited = new Uint8Array(sw * sh);
+        const queue = [];
+        
+        const isWhite = (r, g, b) => r > 240 && g > 240 && b > 240;
+        const getIndex = (x, y) => (y * sw + x) * 4;
+
+        // Push border pixels
+        for (let x = 0; x < sw; x++) {
+          // Top edge
+          let idx = getIndex(x, 0);
+          if (isWhite(data[idx], data[idx+1], data[idx+2])) {
+            visited[x] = 1;
+            queue.push(x, 0);
+          }
+          // Bottom edge
+          idx = getIndex(x, sh - 1);
+          if (isWhite(data[idx], data[idx+1], data[idx+2])) {
+            visited[(sh - 1) * sw + x] = 1;
+            queue.push(x, sh - 1);
+          }
         }
-      }
 
-      tempCtx.putImageData(imgData, 0, 0);
-      return tempCanvas;
+        for (let y = 0; y < sh; y++) {
+          // Left edge
+          let idx = getIndex(0, y);
+          if (isWhite(data[idx], data[idx+1], data[idx+2])) {
+            visited[y * sw] = 1;
+            queue.push(0, y);
+          }
+          // Right edge
+          idx = getIndex(sw - 1, y);
+          if (isWhite(data[idx], data[idx+1], data[idx+2])) {
+            visited[y * sw + (sw - 1)] = 1;
+            queue.push(sw - 1, y);
+          }
+        }
+
+        let head = 0;
+        const dx = [0, 0, 1, -1];
+        const dy = [1, -1, 0, 0];
+
+        while (head < queue.length) {
+          const cx = queue[head++];
+          const cy = queue[head++];
+
+          const idx = (cy * sw + cx) * 4;
+          data[idx + 3] = 0; // Set alpha to 0
+
+          for (let i = 0; i < 4; i++) {
+            const nx = cx + dx[i];
+            const ny = cy + dy[i];
+
+            if (nx >= 0 && nx < sw && ny >= 0 && ny < sh) {
+              const vIdx = ny * sw + nx;
+              if (visited[vIdx] === 0) {
+                const pIdx = vIdx * 4;
+                if (isWhite(data[pIdx], data[pIdx+1], data[pIdx+2])) {
+                  visited[vIdx] = 1;
+                  queue.push(nx, ny);
+                }
+              }
+            }
+          }
+        }
+
+        cropCtx.putImageData(imgData, 0, 0);
+        return cropCanvas;
+      } catch (e) {
+        console.error("Failed to remove crop background:", e);
+        return null;
+      }
     };
 
-    const createPeeps = (processedImage) => {
+    const createPeeps = () => {
       const { rows, cols } = config;
       const { naturalWidth: width, naturalHeight: height } = img;
       const total = rows * cols;
@@ -146,15 +208,16 @@ export default function CrowdCanvas({ rows = 4, cols = 4 }) {
       const rectHeight = height / cols;
 
       for (let i = 0; i < total; i++) {
+        const sx = (i % rows) * rectWidth;
+        const sy = ((i / rows) | 0) * rectHeight;
+        const transparentCrop = removeBackgroundOfCrop(img, sx, sy, rectWidth, rectHeight);
+        
         allPeeps.push(
           createPeep({
-            image: processedImage,
-            rect: [
-              (i % rows) * rectWidth,
-              ((i / rows) | 0) * rectHeight,
-              rectWidth,
-              rectHeight,
-            ],
+            image: transparentCrop || img,
+            rect: transparentCrop 
+              ? [0, 0, rectWidth, rectHeight]
+              : [sx, sy, rectWidth, rectHeight],
           })
         );
       }
@@ -188,6 +251,7 @@ export default function CrowdCanvas({ rows = 4, cols = 4 }) {
     };
 
     const resize = () => {
+      if (!canvas || !canvas.parentElement) return;
       stage.width = canvas.parentElement.clientWidth || window.innerWidth;
       stage.height = canvas.parentElement.clientHeight || 240;
       canvas.width = stage.width;
@@ -206,7 +270,10 @@ export default function CrowdCanvas({ rows = 4, cols = 4 }) {
       }
     };
 
+    let isMounted = true;
+
     const init = () => {
+      if (!isMounted) return;
       const transparentCanvas = makeWhiteTransparent(img);
       createPeeps(transparentCanvas);
       resize();
@@ -216,10 +283,14 @@ export default function CrowdCanvas({ rows = 4, cols = 4 }) {
     img.onload = init;
     img.src = config.src;
 
-    const handleResize = () => resize();
+    const handleResize = () => {
+      if (isMounted) resize();
+    };
     window.addEventListener("resize", handleResize);
 
     return () => {
+      isMounted = false;
+      img.onload = null;
       window.removeEventListener("resize", handleResize);
       gsap.ticker.remove(render);
       crowd.forEach((peep) => peep.walk && peep.walk.kill());

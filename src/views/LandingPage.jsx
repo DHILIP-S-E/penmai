@@ -11,6 +11,10 @@ import { showToast } from '../components/Toast';
 import AttendingFrameGenerator from '../components/AttendingFrameGenerator';
 import CrowdCanvas from '../components/CrowdCanvas';
 import NumberFlow from '@number-flow/react';
+import { useScroll } from 'framer-motion';
+import NeuralNetBackground from '../components/NeuralNetBackground';
+import ScrollScatterText from '../components/ScrollScatterText';
+import EventGallery from '../components/EventGallery';
 
 
 // Import available speaker profile images
@@ -21,6 +25,13 @@ import themeDigitalSkills from '../assets/theme_digital_skills.png';
 import themeHealthTech from '../assets/theme_healthtech.png';
 import themeEntrepreneurship from '../assets/theme_entrepreneurship.png';
 import themeAIInnovation from '../assets/theme_ai_innovation.png';
+
+// Import partner/sponsor logos (whitespace-trimmed, transparent PNGs)
+import logoOpenMadurai from '../assets/sponsors/openmadurai.png';
+import logoBuizLab from '../assets/sponsors/buizlab.png';
+import logoGDG from '../assets/sponsors/gdg.png';
+import logoUnik from '../assets/sponsors/unik.png';
+import logoVenture from '../assets/sponsors/venture.png';
 
 // Inline icons definition for social links
 const Linkedin = ({ size = 18, ...props }) => (
@@ -121,11 +132,11 @@ const WomenSilhouetteIllustration = () => (
 
 // Partners Data
 const PARTNERS = [
-  { role: 'Virudhunagar District', name: 'OpenMadurAI', logo: null },
-  { role: 'Organized by', name: 'StartupTN', logo: null },
-  { role: 'Supported by', name: 'Google Developer Groups Madurai', logo: null },
-  { role: 'In Association with', name: 'savemom', logo: null },
-  { role: 'In Association with', name: 'Venture Nest', logo: null }
+  { role: 'Virudhunagar District', name: 'OpenMadurAI', logo: logoOpenMadurai },
+  { role: 'Organized by', name: 'Buiz lab', logo: logoBuizLab },
+  { role: 'Supported by', name: 'Google Developer Groups Madurai', logo: logoGDG },
+  { role: 'In Association with', name: 'Unik Solutions', logo: logoUnik },
+  { role: 'In Association with', name: 'Venture Nest', logo: logoVenture }
 ];
 
 // Themes Data with tech stacks
@@ -190,6 +201,12 @@ const FAQS = [
 ];
 
 export default function LandingPage() {
+  const themesRef = useRef(null);
+  const { scrollYProgress: themesScrollProgress } = useScroll({
+    target: themesRef,
+    offset: ["start end", "end start"]
+  });
+
   const [timeLeft, setTimeLeft] = useState({ days: 10, hours: 8, minutes: 45, seconds: 30 });
   const [isPaused, setIsPaused] = useState(false);
   const [resetTrigger, setResetTrigger] = useState(0);
@@ -542,7 +559,9 @@ export default function LandingPage() {
                   <div className="glass-premium partner-logo-hover" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '16px 12px' }}>
                     <span style={{ fontSize: '8px', color: 'var(--color-text-secondary)', textTransform: 'uppercase', fontWeight: 'bold', marginBottom: '8px', letterSpacing: '0.05em' }}>{partner.role}</span>
                     {partner.logo
-                      ? <img src={partner.logo} alt={partner.name} style={{ height: '34px', maxWidth: '100%', objectFit: 'contain' }} />
+                      ? <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '62px', width: '100%', padding: '8px 10px', background: '#fff', borderRadius: '10px' }}>
+                          <img src={partner.logo} alt={partner.name} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
+                        </div>
                       : <span style={{ fontSize: '13px', fontWeight: '800', color: 'var(--color-pink)', textAlign: 'center', fontFamily: 'Sora, sans-serif' }}>{partner.name}</span>
                     }
                   </div>
@@ -560,7 +579,7 @@ export default function LandingPage() {
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <span className="section-label"><Sparkles size={10} />About</span>
               <h2 style={{ fontSize: '34px', marginBottom: '16px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
-                <span className="section-heading-underline">About PenmAI 2.0</span>
+                <ScrollScatterText className="section-heading-underline" text="About PenmAI 2.0" />
               </h2>
               <p style={{ color: 'var(--color-text-secondary)', fontSize: '15px', lineHeight: 1.8, maxWidth: '680px', margin: '0 auto' }}>
                 PenmAI 2.0 is a community initiative to build open, inclusive and impactful solutions. Curated to empower women technologists in distributed intelligence, machine learning systems, and software engineering.
@@ -588,13 +607,24 @@ export default function LandingPage() {
       </section>
 
       {/* Themes */}
-      <section id="themes" style={{ padding: '80px 0', background: 'rgba(124, 58, 237, 0.02)', borderBottom: '1px solid var(--color-border)' }}>
-        <div className="container">
+      <section
+        id="themes"
+        ref={themesRef}
+        style={{
+          padding: '80px 0',
+          background: 'rgba(124, 58, 237, 0.02)',
+          borderBottom: '1px solid var(--color-border)',
+          position: 'relative',
+          overflow: 'hidden'
+        }}
+      >
+        <NeuralNetBackground scrollYProgress={themesScrollProgress} />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <AnimatedSection direction="up">
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <span className="section-label"><Cpu size={10} />Focus Areas</span>
               <h2 style={{ fontSize: '32px', marginBottom: '10px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
-                <span className="section-heading-underline">Themes</span>
+                <ScrollScatterText className="section-heading-underline" text="Themes" />
               </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>Core focus domains curating the sessions</p>
             </div>
@@ -631,7 +661,7 @@ export default function LandingPage() {
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <span className="section-label"><Star size={10} />Highlights</span>
               <h2 style={{ fontSize: '32px', marginBottom: '10px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
-                <span className="section-heading-underline">Highlights</span>
+                <ScrollScatterText className="section-heading-underline" text="Highlights" />
               </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>Key event offerings for participants</p>
             </div>
@@ -649,6 +679,24 @@ export default function LandingPage() {
               </AnimatedSection>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Past Event Gallery */}
+      <section id="gallery" style={{ padding: '80px 0', background: 'rgba(124, 58, 237, 0.01)', borderBottom: '1px solid var(--color-border)' }}>
+        <div className="container">
+          <AnimatedSection direction="up">
+            <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+              <span className="section-label"><Camera size={10} />Gallery</span>
+              <h2 style={{ fontSize: '32px', marginBottom: '10px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
+                {/* Long heading: default spread (50) would scatter 28 chars ~700px wide and
+                    widen the page horizontally until scroll converges it. */}
+                <ScrollScatterText className="section-heading-underline" text="Moments From Our Past Events" spread={16} />
+              </h2>
+              <p style={{ color: 'var(--color-text-secondary)' }}>A look back at the community we have built together</p>
+            </div>
+          </AnimatedSection>
+          <EventGallery />
         </div>
       </section>
 
@@ -698,7 +746,7 @@ export default function LandingPage() {
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <span className="section-label"><Users size={10} />Speakers</span>
               <h2 style={{ fontSize: '32px', marginBottom: '10px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
-                <span className="section-heading-underline">Featured Speakers</span>
+                <ScrollScatterText className="section-heading-underline" text="Featured Speakers" />
               </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>Technical cohort leads guiding the sessions</p>
             </div>
@@ -741,7 +789,7 @@ export default function LandingPage() {
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <span className="section-label"><BookOpen size={10} />Workshops</span>
               <h2 style={{ fontSize: '32px', marginBottom: '10px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
-                <span className="section-heading-underline">Technical Workshops</span>
+                <ScrollScatterText className="section-heading-underline" text="Technical Workshops" />
               </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>Hands-on coding labs with limited seating capacities</p>
             </div>
@@ -794,7 +842,7 @@ export default function LandingPage() {
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <span className="section-label"><UserCheck size={10} />Mentors</span>
               <h2 style={{ fontSize: '32px', marginBottom: '10px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
-                <span className="section-heading-underline">Meet the Mentors</span>
+                <ScrollScatterText className="section-heading-underline" text="Meet the Mentors" />
               </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>Book 1-on-1 advisor slots with regional developers and directors</p>
             </div>
@@ -831,7 +879,7 @@ export default function LandingPage() {
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <span className="section-label"><Clock size={10} />Schedule</span>
               <h2 style={{ fontSize: '32px', marginBottom: '12px', letterSpacing: '-0.01em', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
-                <span className="section-heading-underline">Event Timeline</span>
+                <ScrollScatterText className="section-heading-underline" text="Event Timeline" />
               </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>Follow the chronological progression of PenmAI 2.0</p>
             </div>
@@ -865,7 +913,7 @@ export default function LandingPage() {
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <span className="section-label"><Camera size={10} />Share</span>
               <h2 style={{ fontSize: '32px', marginBottom: '10px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
-                <span className="section-heading-underline">Generate Your Attending Frame</span>
+                <ScrollScatterText className="section-heading-underline" text="Generate Your Attending Frame" spread={26} rotate={26} />
               </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>Upload your photo, add your name, and share that you are attending PenmAI 2026!</p>
             </div>
@@ -882,7 +930,9 @@ export default function LandingPage() {
       <section id="faq" style={{ padding: '100px 0', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container" style={{ maxWidth: '800px' }}>
           <div style={{ textAlign: 'center', marginBottom: '56px' }}>
-            <h2 style={{ fontSize: '32px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>FAQ & Support</h2>
+            <h2 style={{ fontSize: '32px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
+              <ScrollScatterText text="FAQ & Support" />
+            </h2>
             <p style={{ color: 'var(--color-text-secondary)', marginTop: '6px' }}>Find quick answers about scheduling and passes</p>
           </div>
 
@@ -1036,7 +1086,7 @@ export default function LandingPage() {
               {/* Left side details and QR box */}
               <div>
                 <h2 style={{ fontSize: '32px', fontWeight: '900', color: 'var(--color-text-primary)', marginBottom: '8px', fontFamily: 'Sora, sans-serif' }}>
-                  REGISTER HERE!
+                  <ScrollScatterText text="REGISTER HERE!" />
                 </h2>
                 <p style={{ color: 'var(--color-text-secondary)', fontSize: '13px', marginBottom: '24px', lineHeight: 1.5 }}>
                   Scan the QR code or fill out the form to secure your free entry badge. Join the largest female tech ecosystem in the region.
