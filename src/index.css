@@ -258,6 +258,86 @@ button {
   animation: spinSlow 30s infinite linear;
 }
 
+/* Glow pulse for live dot */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 21, 94, 0.5); transform: scale(1); }
+  50% { box-shadow: 0 0 0 6px rgba(239, 21, 94, 0); transform: scale(1.15); }
+}
+
+.glow-pulse {
+  animation: glowPulse 2s infinite ease-in-out;
+}
+
+/* Section heading underline shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.section-heading-underline {
+  display: inline-block;
+  position: relative;
+}
+
+.section-heading-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-pink), #ff7eb3, var(--color-pink));
+  background-size: 200% auto;
+  animation: shimmer 2.5s linear infinite;
+}
+
+/* Card hover lift with glow */
+.card-hover-lift {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.25s ease;
+}
+
+.card-hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px rgba(239, 21, 94, 0.14);
+  border-color: var(--color-pink) !important;
+}
+
+/* Glassmorphism card premium */
+.glass-premium {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(239, 21, 94, 0.12);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(30, 15, 48, 0.07), inset 0 1px 0 rgba(255,255,255,0.9);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.glass-premium:hover {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(239, 21, 94, 0.25);
+  box-shadow: 0 16px 48px rgba(239, 21, 94, 0.12), inset 0 1px 0 rgba(255,255,255,1);
+}
+
+/* Section label pill */
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-soft-pink);
+  color: var(--color-pink);
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid rgba(239, 21, 94, 0.18);
+  margin-bottom: 12px;
+}
+
+
 .container {
   max-width: 1240px;
   margin: 0 auto;
@@ -457,7 +537,11 @@ button {
   transform: translateY(-8.5px) rotate(-45deg);
 }
 
-/* Responsive Overrides */
+/* =========================================
+   RESPONSIVE OVERRIDES
+   ========================================= */
+
+/* Tablet (≤ 991px) */
 @media (max-width: 991px) {
   .desktop-sidebar {
     display: none !important;
@@ -466,67 +550,159 @@ button {
   .hamburger-btn {
     display: flex !important;
   }
-
-  /* Responsive Grid Adjustments */
-  .container > div[style*="gridTemplateColumns"] {
-    grid-template-columns: 1fr !important;
-    gap: 32px !important;
-  }
-
-  /* Hero Section spacing */
-  section {
-    padding: 60px 0 !important;
-  }
 }
 
+/* Mobile (≤ 768px) */
 @media (max-width: 768px) {
+
+  /* --- GLOBAL --- */
+  body {
+    overflow-x: hidden;
+  }
+
+  .container {
+    padding: 0 16px;
+  }
+
   h1 {
-    font-size: 42px !important;
+    font-size: 36px !important;
+    line-height: 1.15 !important;
   }
 
   h2 {
-    font-size: 28px !important;
+    font-size: 26px !important;
   }
 
+  h3 {
+    font-size: 17px !important;
+  }
+
+  /* --- NAV --- */
+  header .container {
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  header .container > div:first-child span:first-child {
+    font-size: 18px !important;
+  }
+
+  /* --- HERO SECTION --- */
+  section {
+    padding: 28px 0 !important;
+  }
+
+  /* Hero two-column grid → single column */
+  section .container > div[style] {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  /* Hero: center content on mobile */
+  section:first-of-type > .container > div > div:first-child {
+    text-align: center;
+  }
+
+  /* Countdown: stay in a row, smaller */
+  .countdown-row {
+    justify-content: center !important;
+    gap: 8px !important;
+  }
+
+  /* Event Details panel: 1 column on very small */
+  .event-detail-panel {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* CTAs: stack on mobile if needed */
+  .hero-cta-row {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    justify-content: center;
+  }
+
+  /* VR Girl image: center and limit size */
+  section .container img {
+    max-width: 260px !important;
+    margin: 0 auto;
+  }
+
+  /* Dashed ring: hide on mobile to prevent overflow */
+  .spin-slow {
+    display: none !important;
+  }
+
+  /* Floating badge: reposition */
+  .float-animation + div,
+  .glass-panel.float-animation {
+    right: 0 !important;
+    bottom: 0 !important;
+  }
+
+  /* --- BUTTONS --- */
   .btn-gradient, .btn-outline {
-    padding: 10px 22px;
+    padding: 9px 20px;
     font-size: 13px;
   }
 
-  /* Adjust Event details box on Hero */
-  div[style*="flexWrap: 'wrap'"] {
-    flex-direction: column !important;
-    gap: 12px !important;
+  /* --- GRID SECTIONS (speakers, mentors, themes, etc) --- */
+  div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
   }
 
-  /* Timeline adjustment for narrow screens */
+  /* --- TIMELINE --- */
   .timeline-line {
     left: 20px;
     transform: none;
   }
-  
+
   .timeline-item {
     justify-content: flex-start !important;
     flex-direction: row !important;
     padding-left: 45px;
   }
-  
+
   .timeline-item:nth-child(even) {
     flex-direction: row !important;
   }
-  
+
   .timeline-badge {
     left: 20px;
     transform: translateX(-50%);
   }
-  
+
   .timeline-item:hover .timeline-badge {
     transform: translateX(-50%) scale(1.2);
   }
-  
+
   .timeline-card {
     width: 100% !important;
-    border-left-width: 4px !important;
-    border-left-color: var(--color-pink) !important;
+  }
+
+  /* --- TICKET CARD --- */
+  .ticket-card {
+    max-width: 100% !important;
+  }
+}
+
+/* Extra small (≤ 480px) */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 30px !important;
+  }
+
+  h2 {
+    font-size: 22px !important;
+  }
+
+  .container {
+    padding: 0 12px;
+  }
+
+  .btn-gradient, .btn-outline {
+    padding: 9px 18px;
+    font-size: 12px;
   }
 }
