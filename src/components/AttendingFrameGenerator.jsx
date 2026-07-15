@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from "react";
 import attendingTemplate from "../assets/attending.jpeg";
-import vrGirlImage from "../assets/VR Girl.png";
+import vrGirlImage from "../assets/vr-girl.webp";
 import { Camera, Download, RefreshCw } from "lucide-react";
 
 export default function AttendingFrameGenerator() {

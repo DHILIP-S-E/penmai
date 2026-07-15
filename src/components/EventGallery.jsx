@@ -6,7 +6,7 @@ import 'swiper/css';
 import 'swiper/css/effect-creative';
 import 'swiper/css/pagination';
 
-// Filenames carry spaces and colons, so let Vite resolve them at build time.
+// The folder name carries a space, so let Vite resolve these at build time.
 const photoModules = import.meta.glob('../assets/old event photos/*.jpeg', {
   eager: true,
   query: '?url',

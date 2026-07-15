@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
-  Calendar, MapPin, Clock, Users, BookOpen, Star, HelpCircle,
+  Calendar, MapPin, Clock, Users, Star, HelpCircle,
   ChevronDown, ChevronUp, Play, Sparkles, Award, Compass,
   UserCheck, ArrowRight, Heart, Cpu, Check, Briefcase,
-  Terminal, Settings, Trophy, Shield, Monitor, Menu, X, Mail, Camera, Plus
+  Terminal, Settings, Trophy, Shield, Monitor, Menu, X, Mail, Camera
 } from 'lucide-react';
 import GlassCard from '../components/GlassCard';
-import vrGirlImage from '../assets/VR Girl.png';
+import vrGirlImage from '../assets/vr-girl.webp';
 import { showToast } from '../components/Toast';
 import AttendingFrameGenerator from '../components/AttendingFrameGenerator';
 import CrowdCanvas from '../components/CrowdCanvas';
@@ -14,7 +14,24 @@ import NumberFlow from '@number-flow/react';
 import { useScroll } from 'framer-motion';
 import NeuralNetBackground from '../components/NeuralNetBackground';
 import ScrollScatterText from '../components/ScrollScatterText';
+import ScrollScatterGroup from '../components/ScrollScatterGroup';
 import EventGallery from '../components/EventGallery';
+import BackgroundGradient from '../components/BackgroundGradient';
+import HoverBorderGradient from '../components/HoverBorderGradient';
+import BackgroundLines from '../components/BackgroundLines';
+import TextGenerateEffect from '../components/TextGenerateEffect';
+import FloatingNav from '../components/FloatingNav';
+
+const NAV_ITEMS = [
+  { name: 'About', link: '#about' },
+  { name: 'Themes', link: '#themes' },
+  { name: 'Highlights', link: '#highlights' },
+  { name: 'Speakers', link: '#speakers' },
+  { name: 'Schedule', link: '#schedule' },
+  { name: 'Mentors', link: '#mentors' },
+  { name: 'Register', link: '#register' },
+  { name: 'FAQ', link: '#faq' },
+];
 
 
 // Import available speaker profile images
@@ -185,13 +202,6 @@ const TIMELINE = [
   { label: 'Closing Ceremony & Handouts', time: '04:00 PM', desc: 'Certificates distribution and group photo session.' }
 ];
 
-// Workshops Data
-const WORKSHOPS = [
-  { title: 'Intro to GenAI & LLMs', duration: '90 Mins', difficulty: 'Beginner', seats: 15, reqs: 'Laptop + internet', speaker: 'Jane Doe' },
-  { title: 'Fine-Tuning Local Models', duration: '120 Mins', difficulty: 'Advanced', seats: 8, reqs: 'Colab Account + Basic Python', speaker: 'Dr. Aruna Devi' },
-  { title: 'Product Design with Figma & AI', duration: '90 Mins', difficulty: 'Intermediate', seats: 24, reqs: 'Figma Account', speaker: 'Meera Jasmine' }
-];
-
 // FAQs Data
 const FAQS = [
   { q: 'Is this event completely free?', a: 'Yes! PenmAI 2.0 is entirely free, sponsored by our partners to support the Women Techmakers Initiative.' },
@@ -208,8 +218,6 @@ export default function LandingPage() {
   });
 
   const [timeLeft, setTimeLeft] = useState({ days: 10, hours: 8, minutes: 45, seconds: 30 });
-  const [isPaused, setIsPaused] = useState(false);
-  const [resetTrigger, setResetTrigger] = useState(0);
   const [openFaq, setOpenFaq] = useState(null);
   const [registered, setRegistered] = useState(false);
   const [bookingMentor, setBookingMentor] = useState(null);
@@ -224,14 +232,8 @@ export default function LandingPage() {
   // Mentor Booking Slot State
   const [selectedSlot, setSelectedSlot] = useState(null);
 
-  // Reset countdown to initial state
-  useEffect(() => {
-    setTimeLeft({ days: 10, hours: 8, minutes: 45, seconds: 30 });
-  }, [resetTrigger]);
-
   // Countdown timer logic
   useEffect(() => {
-    if (isPaused) return;
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
@@ -243,7 +245,7 @@ export default function LandingPage() {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [isPaused]);
+  }, []);
 
   const handleBookMentor = (mentor) => {
     setBookingMentor(mentor);
@@ -281,67 +283,37 @@ export default function LandingPage() {
   };
 
   return (
-    <div style={{ position: 'relative', width: '100%', minHeight: '100vh', background: 'var(--color-bg)' }}>
+    <div id="top" style={{ position: 'relative', width: '100%', minHeight: '100vh', background: 'var(--color-bg)' }}>
       {/* Background shapes */}
       <div className="blob-container">
         <div className="blob blob-1" />
         <div className="blob blob-2" />
       </div>
 
-      {/* Navigation Header */}
-      <header style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 1000,
-        background: 'rgba(255, 255, 255, 0.8)',
-        backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid var(--color-border)',
-        padding: '12px 0'
-      }}>
-        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '22px', fontWeight: '800', color: 'var(--color-pink)', fontFamily: 'Sora, sans-serif' }}>
-              PenmAI 2.0
-            </span>
-          </div>
+      {/* Navigation — floating pill, hides on scroll-down / reveals on scroll-up */}
+      <FloatingNav navItems={NAV_ITEMS}>
+        <button onClick={() => {
+          if (registered) {
+            document.getElementById('register').scrollIntoView({ behavior: 'smooth' });
+          } else {
+            setRegisterName("Jane Doe");
+            handleRegister();
+          }
+        }} className="btn-gradient" style={{ padding: '8px 20px', fontSize: '13px' }}>
+          {registered ? 'View Pass ✓' : 'Register'}
+        </button>
 
-          <nav className="desktop-sidebar" style={{ display: 'flex', gap: '24px', fontSize: '13px', fontWeight: 600, color: 'var(--color-text-secondary)' }}>
-            <a href="#about">About</a>
-            <a href="#themes">Themes</a>
-            <a href="#highlights">Highlights</a>
-            <a href="#speakers">Speakers</a>
-            <a href="#schedule">Schedule</a>
-            <a href="#workshops">Workshops</a>
-            <a href="#mentors">Mentors</a>
-            <a href="#register">Register</a>
-            <a href="#faq">FAQ</a>
-          </nav>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <button onClick={() => {
-              if (registered) {
-                document.getElementById('register').scrollIntoView({ behavior: 'smooth' });
-              } else {
-                setRegisterName("Jane Doe");
-                handleRegister();
-              }
-            }} className="btn-gradient" style={{ padding: '8px 20px', fontSize: '13px' }}>
-              {registered ? 'View Pass ✓' : 'Register'}
-            </button>
-
-            {/* Mobile Hamburger menu */}
-            <button 
-              className={`hamburger-btn ${mobileMenuOpen ? 'open' : ''}`}
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle menu"
-            >
-              <span className="hamburger-line"></span>
-              <span className="hamburger-line"></span>
-              <span className="hamburger-line"></span>
-            </button>
-          </div>
-        </div>
-      </header>
+        {/* Mobile Hamburger menu */}
+        <button
+          className={`hamburger-btn ${mobileMenuOpen ? 'open' : ''}`}
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          <span className="hamburger-line"></span>
+          <span className="hamburger-line"></span>
+          <span className="hamburger-line"></span>
+        </button>
+      </FloatingNav>
 
       {/* Mobile Drawer Menu */}
       <div className={`mobile-drawer-overlay ${mobileMenuOpen ? 'open' : ''}`} onClick={() => setMobileMenuOpen(false)} />
@@ -358,7 +330,6 @@ export default function LandingPage() {
           <a href="#highlights" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>Highlights</a>
           <a href="#speakers" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>Speakers</a>
           <a href="#schedule" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>Schedule</a>
-          <a href="#workshops" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>Workshops</a>
           <a href="#mentors" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>Mentors</a>
           <a href="#register" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>Register</a>
           <a href="#faq" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>FAQ</a>
@@ -376,8 +347,9 @@ export default function LandingPage() {
         </button>
       </div>
 
-      {/* Hero Section */}
-      <section style={{ padding: '36px 0 48px', position: 'relative' }}>
+      {/* Hero Section — top padding clears the fixed FloatingNav, which
+          (unlike the sticky header it replaced) takes up no space in flow. */}
+      <section style={{ padding: '104px 0 48px', position: 'relative' }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.85fr', gap: '24px', alignItems: 'center' }}>
             
@@ -392,8 +364,8 @@ export default function LandingPage() {
                 Empowering Women. Building AI-Powered Futures.
               </h3>
 
-              <p style={{ color: 'var(--color-text-secondary)', fontSize: '13.5px', marginBottom: '16px', maxWidth: '100%', lineHeight: '1.5' }}>
-                PenmAI 2.0 is a celebration of women in technology. Join us for a day of learning, collaboration and inspiration as we explore the power of AI, innovation and leadership.
+              <p style={{ color: 'var(--color-text-secondary)', fontSize: '13.5px', marginBottom: '16px', maxWidth: '100%', lineHeight: '1.5', position: 'relative' }}>
+                <TextGenerateEffect text="PenmAI 2.0 is a celebration of women in technology. Join us for a day of learning, collaboration and inspiration as we explore the power of AI, innovation and leadership." />
               </p>
 
               {/* Countdown Timer Widget */}
@@ -413,68 +385,6 @@ export default function LandingPage() {
                     </span>
                   </div>
                 ))}
-
-                {/* Interactive Timer Controls */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '6px' }}>
-                  {/* Vertical Divider */}
-                  <div style={{ width: '1px', height: '36px', background: 'var(--color-border)' }} />
-
-                  {/* Play/Pause Button */}
-                  <button
-                    onClick={() => setIsPaused(!isPaused)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '32px',
-                      height: '32px',
-                      borderRadius: '50%',
-                      background: 'var(--color-soft-pink)',
-                      border: '1px solid rgba(239, 21, 94, 0.15)',
-                      color: 'var(--color-pink)',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                      outline: 'none'
-                    }}
-                    title={isPaused ? "Start Countdown" : "Pause Countdown"}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-pink)'; e.currentTarget.style.color = '#fff'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-soft-pink)'; e.currentTarget.style.color = 'var(--color-pink)'; }}
-                  >
-                    {isPaused ? (
-                      <svg viewBox="0 0 12 14" fill="currentColor" style={{ width: '10px', height: '11px', marginLeft: '1px' }}>
-                        <path d="M0.9 13.2C1.2 13.2 1.5 13.1 1.8 12.9L10.9 7.7C11.6 7.3 11.8 7 11.8 6.6C11.8 6.2 11.6 6 10.9 5.6L1.8 0.3C1.5 0.1 1.2 0 0.9 0C0.4 0 0 0.5 0 1.1V12.1C0 12.8 0.4 13.2 0.9 13.2Z" />
-                      </svg>
-                    ) : (
-                      <svg viewBox="0 0 10 13" fill="currentColor" style={{ width: '10px', height: '11px' }}>
-                        <path d="M1 12.7H2.8C3.5 12.7 3.9 12.4 3.9 11.7V1C3.9 0.3 3.5 0 2.8 0H1C0.4 0 0 0.4 0 1V11.7C0 12.4 0.4 12.7 1 12.7ZM6.7 12.7H8.5C9.2 12.7 9.5 12.4 9.5 11.7V1C9.5 0.3 9.2 0 8.5 0H6.7C6 0 5.7 0.4 5.7 1V11.7C6 12.4 6.7 12.7 6.7 12.7Z" />
-                      </svg>
-                    )}
-                  </button>
-
-                  {/* Reset Button */}
-                  <button
-                    onClick={() => setResetTrigger(prev => prev + 1)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '32px',
-                      height: '32px',
-                      borderRadius: '50%',
-                      background: 'rgba(255,255,255,0.7)',
-                      border: '1px solid var(--color-border)',
-                      color: 'var(--color-text-secondary)',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                      outline: 'none'
-                    }}
-                    title="Reset Countdown"
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-pink)'; e.currentTarget.style.color = 'var(--color-pink)'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.color = 'var(--color-text-secondary)'; }}
-                  >
-                    <Plus size={14} style={{ transform: 'rotate(45deg)' }} />
-                  </button>
-                </div>
               </div>
 
               {/* Event Details Cohesive Dashboard Panel */}
@@ -498,9 +408,9 @@ export default function LandingPage() {
 
               {/* CTAs */}
               <div className="hero-cta-row" style={{ display: 'flex', gap: '12px' }}>
-                <a href="#register" className="btn-gradient" style={{ padding: '10px 28px', fontSize: '13px' }}>
+                <HoverBorderGradient as="a" href="#register">
                   Register Now
-                </a>
+                </HoverBorderGradient>
                 <button onClick={() => setShowTrailer(true)} className="btn-outline" style={{ padding: '10px 28px', fontSize: '13px', borderColor: 'var(--color-pink)', color: 'var(--color-pink)' }}>
                   <Play size={12} fill="currentColor" /> Watch Trailer
                 </button>
@@ -509,6 +419,9 @@ export default function LandingPage() {
 
             {/* Right side poster high-resolution VR Girl image with floating glass elements */}
             <div className="hero-image-col" style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              {/* Radiating animated lines behind the poster */}
+              <BackgroundLines opacity={0.45} style={{ zIndex: 0 }} />
+
               {/* Backing decorative circles to match poster layout */}
               <div className="spin-slow" style={{ position: 'absolute', width: '520px', height: '520px', borderRadius: '50%', border: '1.5px dashed var(--color-pink)', opacity: 0.5, zIndex: 0 }} />
               
@@ -517,7 +430,7 @@ export default function LandingPage() {
                   src={vrGirlImage}
                   alt="PenmAI 2.0 VR Girl"
                   className="float-animation"
-                  style={{ width: '100%', height: 'auto', maxWidth: '520px', display: 'block', objectFit: 'contain' }}
+                  style={{ width: '100%', height: 'auto', maxWidth: '440px', display: 'block', objectFit: 'contain' }}
                 />
                 
                 {/* Floating pill badge */}
@@ -552,10 +465,9 @@ export default function LandingPage() {
       {/* Partners Section */}
       <section style={{ padding: '36px 0', background: 'rgba(255,255,255,0.5)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container">
-          <AnimatedSection direction="up">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', alignItems: 'center', gap: '20px' }}>
+          <ScrollScatterGroup style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', alignItems: 'center', gap: '20px' }} spread={70}>
               {PARTNERS.map((partner, i) => (
-                <AnimatedSection key={i} delay={i * 80} direction="up">
+                <div key={i}>
                   <div className="glass-premium partner-logo-hover" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '16px 12px' }}>
                     <span style={{ fontSize: '8px', color: 'var(--color-text-secondary)', textTransform: 'uppercase', fontWeight: 'bold', marginBottom: '8px', letterSpacing: '0.05em' }}>{partner.role}</span>
                     {partner.logo
@@ -565,10 +477,9 @@ export default function LandingPage() {
                       : <span style={{ fontSize: '13px', fontWeight: '800', color: 'var(--color-pink)', textAlign: 'center', fontFamily: 'Sora, sans-serif' }}>{partner.name}</span>
                     }
                   </div>
-                </AnimatedSection>
+                </div>
               ))}
-            </div>
-          </AnimatedSection>
+          </ScrollScatterGroup>
         </div>
       </section>
 
@@ -586,13 +497,13 @@ export default function LandingPage() {
               </p>
             </div>
           </AnimatedSection>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
+          <ScrollScatterGroup style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
             {[
               { icon: <Award size={22} color="var(--color-pink)" />, title: 'Our Mission', desc: 'Deliver coding sandboxes and expand student software pathways.' },
               { icon: <Sparkles size={22} color="var(--color-pink)" />, title: 'Our Vision', desc: 'Cultivating a regional cohort of female tech founders.', featured: true },
               { icon: <Compass size={22} color="var(--color-pink)" />, title: 'Core Goal', desc: 'Incubate inclusive digital products solving real challenges.' }
             ].map((card, i) => (
-              <AnimatedSection key={i} delay={i * 120} direction="up">
+              <div key={i}>
                 <div className={`glass-premium card-hover-lift ${card.featured ? 'featured-card' : ''}`} style={{ padding: '28px 24px', border: card.featured ? '1.5px solid var(--color-pink)' : undefined, boxShadow: card.featured ? 'var(--shadow-glow)' : undefined }}>
                   <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--color-soft-pink)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
                     {card.icon}
@@ -600,9 +511,9 @@ export default function LandingPage() {
                   <h4 style={{ fontSize: '16px', fontWeight: 'bold', color: 'var(--color-text-primary)', marginBottom: '8px' }}>{card.title}</h4>
                   <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>{card.desc}</p>
                 </div>
-              </AnimatedSection>
+              </div>
             ))}
-          </div>
+          </ScrollScatterGroup>
         </div>
       </section>
 
@@ -629,9 +540,9 @@ export default function LandingPage() {
               <p style={{ color: 'var(--color-text-secondary)' }}>Core focus domains curating the sessions</p>
             </div>
           </AnimatedSection>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '28px' }}>
+          <ScrollScatterGroup style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '28px' }}>
             {THEMES.map((theme, i) => (
-              <AnimatedSection key={i} delay={i * 100} direction="up">
+              <div key={i}>
                 <GlassCard interactive={true} style={{ padding: '0', overflow: 'hidden', display: 'flex', flexDirection: 'column', borderRadius: '20px', background: 'white' }}>
                   <div className="theme-card-image-container">
                     <img src={theme.image} alt={theme.name} className="theme-card-image" />
@@ -648,9 +559,9 @@ export default function LandingPage() {
                     <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: 1.55 }}>{theme.desc}</p>
                   </div>
                 </GlassCard>
-              </AnimatedSection>
+              </div>
             ))}
-          </div>
+          </ScrollScatterGroup>
         </div>
       </section>
 
@@ -666,19 +577,21 @@ export default function LandingPage() {
               <p style={{ color: 'var(--color-text-secondary)' }}>Key event offerings for participants</p>
             </div>
           </AnimatedSection>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px' }}>
+          <ScrollScatterGroup style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px' }}>
             {HIGHLIGHTS.map((item, i) => (
-              <AnimatedSection key={i} delay={i * 100} direction={i % 2 === 0 ? 'left' : 'right'}>
-                <div className="glass-premium card-hover-lift" style={{ padding: '28px 24px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '12px' }}>
-                  <div style={{ background: 'var(--color-soft-pink)', padding: '12px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {item.icon}
+              <div key={i}>
+                <BackgroundGradient>
+                  <div className="glass-premium" style={{ padding: '28px 24px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '12px', height: '100%', background: 'white' }}>
+                    <div style={{ background: 'var(--color-soft-pink)', padding: '12px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      {item.icon}
+                    </div>
+                    <h4 style={{ fontSize: '16px', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{item.title}</h4>
+                    <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>{item.desc}</p>
                   </div>
-                  <h4 style={{ fontSize: '16px', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{item.title}</h4>
-                  <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>{item.desc}</p>
-                </div>
-              </AnimatedSection>
+                </BackgroundGradient>
+              </div>
             ))}
-          </div>
+          </ScrollScatterGroup>
         </div>
       </section>
 
@@ -751,87 +664,36 @@ export default function LandingPage() {
               <p style={{ color: 'var(--color-text-secondary)' }}>Technical cohort leads guiding the sessions</p>
             </div>
           </AnimatedSection>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '28px' }}>
+          <ScrollScatterGroup style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '28px' }}>
             {SPEAKERS.map((s, i) => (
-              <AnimatedSection key={i} delay={i * 100} direction="up">
-                <div className="glass-premium card-hover-lift" style={{ textAlign: 'center', padding: '32px 24px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px', position: 'relative' }}>
-                    <div style={{ position: 'absolute', width: '98px', height: '98px', borderRadius: '50%', background: 'var(--color-soft-pink)', zIndex: 0, opacity: 0.6 }} />
-                    {s.avatarImg ? (
-                      <img src={s.avatarImg} alt={s.name} style={{ width: '90px', height: '90px', borderRadius: '50%', border: '2.5px solid var(--color-pink)', objectFit: 'cover', zIndex: 1, position: 'relative' }} />
-                    ) : (
-                      <MemberAvatar name={s.name} size={90} />
-                    )}
+              <div key={i}>
+                <BackgroundGradient>
+                  <div className="glass-premium" style={{ textAlign: 'center', padding: '32px 24px', height: '100%', background: 'white' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px', position: 'relative' }}>
+                      <div style={{ position: 'absolute', width: '98px', height: '98px', borderRadius: '50%', background: 'var(--color-soft-pink)', zIndex: 0, opacity: 0.6 }} />
+                      {s.avatarImg ? (
+                        <img src={s.avatarImg} alt={s.name} style={{ width: '90px', height: '90px', borderRadius: '50%', border: '2.5px solid var(--color-pink)', objectFit: 'cover', zIndex: 1, position: 'relative' }} />
+                      ) : (
+                        <MemberAvatar name={s.name} size={90} />
+                      )}
+                    </div>
+                    <h3 style={{ fontSize: '18px', color: 'var(--color-text-primary)', fontWeight: 'bold' }}>{s.name}</h3>
+                    <span style={{ background: 'var(--color-soft-pink)', color: 'var(--color-pink)', padding: '2px 10px', borderRadius: '6px', fontSize: '10px', fontWeight: '700', textTransform: 'uppercase', display: 'inline-block', marginTop: '4px' }}>
+                      {s.company}
+                    </span>
+                    <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', marginTop: '8px' }}>{s.designation}</p>
+                    <div style={{ background: 'var(--color-soft-pink)', padding: '10px 14px', borderRadius: '10px', fontSize: '12px', fontWeight: '600', color: 'var(--color-pink)', marginTop: '16px', border: '1px solid rgba(239, 21, 94, 0.1)' }}>
+                      {s.topic}
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginTop: '14px', opacity: 0.7 }}>
+                      <a href="#" style={{ color: 'var(--color-text-secondary)' }} className="social-icon-hover"><Twitter size={16} /></a>
+                      <a href="#" style={{ color: 'var(--color-text-secondary)' }} className="social-icon-hover"><Linkedin size={16} /></a>
+                    </div>
                   </div>
-                  <h3 style={{ fontSize: '18px', color: 'var(--color-text-primary)', fontWeight: 'bold' }}>{s.name}</h3>
-                  <span style={{ background: 'var(--color-soft-pink)', color: 'var(--color-pink)', padding: '2px 10px', borderRadius: '6px', fontSize: '10px', fontWeight: '700', textTransform: 'uppercase', display: 'inline-block', marginTop: '4px' }}>
-                    {s.company}
-                  </span>
-                  <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', marginTop: '8px' }}>{s.designation}</p>
-                  <div style={{ background: 'var(--color-soft-pink)', padding: '10px 14px', borderRadius: '10px', fontSize: '12px', fontWeight: '600', color: 'var(--color-pink)', marginTop: '16px', border: '1px solid rgba(239, 21, 94, 0.1)' }}>
-                    {s.topic}
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginTop: '14px', opacity: 0.7 }}>
-                    <a href="#" style={{ color: 'var(--color-text-secondary)' }} className="social-icon-hover"><Twitter size={16} /></a>
-                    <a href="#" style={{ color: 'var(--color-text-secondary)' }} className="social-icon-hover"><Linkedin size={16} /></a>
-                  </div>
-                </div>
-              </AnimatedSection>
+                </BackgroundGradient>
+              </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Technical Workshops */}
-      <section id="workshops" style={{ padding: '80px 0', background: 'rgba(124, 58, 237, 0.02)', borderBottom: '1px solid var(--color-border)' }}>
-        <div className="container">
-          <AnimatedSection direction="up">
-            <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-              <span className="section-label"><BookOpen size={10} />Workshops</span>
-              <h2 style={{ fontSize: '32px', marginBottom: '10px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
-                <ScrollScatterText className="section-heading-underline" text="Technical Workshops" />
-              </h2>
-              <p style={{ color: 'var(--color-text-secondary)' }}>Hands-on coding labs with limited seating capacities</p>
-            </div>
-          </AnimatedSection>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
-            {WORKSHOPS.map((w, idx) => (
-              <AnimatedSection key={idx} delay={idx * 120} direction="up">
-                <GlassCard style={{ padding: '28px 24px', position: 'relative', borderRadius: '20px' }} className="glass-premium">
-                  <span style={{ position: 'absolute', top: '20px', right: '20px', background: 'var(--color-soft-pink)', color: 'var(--color-pink)', padding: '2px 10px', borderRadius: '6px', fontSize: '10px', fontWeight: 'bold' }}>
-                    {w.difficulty}
-                  </span>
-                  <h3 style={{ fontSize: '18px', marginBottom: '16px', color: 'var(--color-text-primary)' }}>{w.title}</h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px', color: 'var(--color-text-secondary)', marginBottom: '16px', borderTop: '1px solid var(--color-border)', paddingTop: '16px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span>Mentor:</span>
-                      <strong style={{ color: 'var(--color-text-primary)' }}>{w.speaker}</strong>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span>Duration:</span>
-                      <strong style={{ color: 'var(--color-text-primary)' }}>{w.duration}</strong>
-                    </div>
-                    <div style={{ margin: '8px 0' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--color-text-secondary)', marginBottom: '4px' }}>
-                        <span>Seats Left</span>
-                        <strong style={{ color: 'var(--color-pink)' }}>{w.seats} / 25</strong>
-                      </div>
-                      <div style={{ height: '6px', background: 'var(--color-lavender)', borderRadius: '999px', overflow: 'hidden' }}>
-                        <div style={{ width: `${((25 - w.seats) / 25) * 100}%`, height: '100%', background: 'linear-gradient(90deg, var(--color-pink), var(--color-purple))', borderRadius: '999px' }} />
-                      </div>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      <span style={{ fontSize: '11px' }}>Requirements:</span>
-                      <strong style={{ color: 'var(--color-text-primary)' }}>{w.reqs}</strong>
-                    </div>
-                  </div>
-                  <button onClick={() => showToast(`Registered for lab: "${w.title}"`, "success")} className="btn-gradient" style={{ width: '100%', justifyContent: 'center', fontSize: '13px', marginTop: '8px' }}>
-                    Register for Lab
-                  </button>
-                </GlassCard>
-              </AnimatedSection>
-            ))}
-          </div>
+          </ScrollScatterGroup>
         </div>
       </section>
 
@@ -847,28 +709,30 @@ export default function LandingPage() {
               <p style={{ color: 'var(--color-text-secondary)' }}>Book 1-on-1 advisor slots with regional developers and directors</p>
             </div>
           </AnimatedSection>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
+          <ScrollScatterGroup style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
             {MENTORS.map((m, i) => (
-              <AnimatedSection key={i} delay={i * 100} direction="up">
-                <div className="glass-premium card-hover-lift" style={{ padding: '28px 24px', textAlign: 'center' }}>
-                  <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px', position: 'relative' }}>
-                    <div style={{ position: 'absolute', width: '72px', height: '72px', borderRadius: '50%', background: 'var(--color-soft-pink)', zIndex: 0, opacity: 0.6 }} />
-                    {m.avatarImg ? (
-                      <img src={m.avatarImg} alt={m.name} style={{ width: '64px', height: '64px', borderRadius: '50%', border: '2.5px solid var(--color-pink)', objectFit: 'cover', zIndex: 1, position: 'relative' }} />
-                    ) : (
-                      <MemberAvatar name={m.name} size={64} />
-                    )}
+              <div key={i}>
+                <BackgroundGradient>
+                  <div className="glass-premium" style={{ padding: '28px 24px', textAlign: 'center', height: '100%', background: 'white' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px', position: 'relative' }}>
+                      <div style={{ position: 'absolute', width: '72px', height: '72px', borderRadius: '50%', background: 'var(--color-soft-pink)', zIndex: 0, opacity: 0.6 }} />
+                      {m.avatarImg ? (
+                        <img src={m.avatarImg} alt={m.name} style={{ width: '64px', height: '64px', borderRadius: '50%', border: '2.5px solid var(--color-pink)', objectFit: 'cover', zIndex: 1, position: 'relative' }} />
+                      ) : (
+                        <MemberAvatar name={m.name} size={64} />
+                      )}
+                    </div>
+                    <h3 style={{ fontSize: '16px', color: 'var(--color-text-primary)', fontWeight: 'bold' }}>{m.name}</h3>
+                    <span style={{ fontSize: '12px', color: 'var(--color-pink)', fontWeight: 'bold', display: 'block', marginTop: '2px' }}>{m.domain}</span>
+                    <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', marginTop: '8px', minHeight: '34px' }}>Ex-{m.companies} • {m.exp} Years Exp</p>
+                    <button onClick={() => handleBookMentor(m)} className="btn-outline" style={{ width: '100%', justifyContent: 'center', padding: '10px', fontSize: '12px', marginTop: '16px' }}>
+                      Book Session
+                    </button>
                   </div>
-                  <h3 style={{ fontSize: '16px', color: 'var(--color-text-primary)', fontWeight: 'bold' }}>{m.name}</h3>
-                  <span style={{ fontSize: '12px', color: 'var(--color-pink)', fontWeight: 'bold', display: 'block', marginTop: '2px' }}>{m.domain}</span>
-                  <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', marginTop: '8px', minHeight: '34px' }}>Ex-{m.companies} • {m.exp} Years Exp</p>
-                  <button onClick={() => handleBookMentor(m)} className="btn-outline" style={{ width: '100%', justifyContent: 'center', padding: '10px', fontSize: '12px', marginTop: '16px' }}>
-                    Book Session
-                  </button>
-                </div>
-              </AnimatedSection>
+                </BackgroundGradient>
+              </div>
             ))}
-          </div>
+          </ScrollScatterGroup>
         </div>
       </section>
 
@@ -889,8 +753,9 @@ export default function LandingPage() {
             {/* Vertical timeline line */}
             <div className="timeline-line" />
 
+            <ScrollScatterGroup itemClassName="timeline-item" spread={26} rotate={2} lift={6}>
             {TIMELINE.map((item, idx) => (
-              <div key={idx} className="timeline-item">
+              <React.Fragment key={idx}>
                 <div className="timeline-badge" />
 
                 <div className="timeline-card">
@@ -900,8 +765,9 @@ export default function LandingPage() {
                   <h4 style={{ fontSize: '14px', fontWeight: 800, color: 'var(--color-text-primary)', marginBottom: '8px' }}>{item.label}</h4>
                   <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>{item.desc}</p>
                 </div>
-              </div>
+              </React.Fragment>
             ))}
+            </ScrollScatterGroup>
           </div>
         </div>
       </section>
@@ -936,7 +802,7 @@ export default function LandingPage() {
             <p style={{ color: 'var(--color-text-secondary)', marginTop: '6px' }}>Find quick answers about scheduling and passes</p>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <ScrollScatterGroup style={{ display: 'flex', flexDirection: 'column', gap: '16px' }} spread={40} rotate={2} lift={8}>
             {FAQS.map((faq, i) => {
               const isOpen = openFaq === i;
               return (
@@ -958,7 +824,7 @@ export default function LandingPage() {
                 </div>
               );
             })}
-          </div>
+          </ScrollScatterGroup>
         </div>
       </section>
 

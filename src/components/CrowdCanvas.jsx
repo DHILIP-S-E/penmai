@@ -274,8 +274,7 @@ export default function CrowdCanvas({ rows = 4, cols = 4 }) {
 
     const init = () => {
       if (!isMounted) return;
-      const transparentCanvas = makeWhiteTransparent(img);
-      createPeeps(transparentCanvas);
+      createPeeps();
       resize();
       gsap.ticker.add(render);
     };

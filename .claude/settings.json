@@ -4,9 +4,13 @@
       "Bash(npm i *)",
       "Bash(node settle.mjs)",
       "Bash(node check.mjs)",
-      "PowerShell(Get-NetTCPConnection -LocalPort 5173 -State Listen -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique | ForEach-Object { $p = Get-Process -Id $_ -ErrorAction SilentlyContinue; if \\($p\\) { \"Killing PID $\\($p.Id\\) \\($\\($p.ProcessName\\)\\)\"; Stop-Process -Id $p.Id -Force } })",
-      "Bash(\"c:/Program Files/Google/Chrome/Application/chrome.exe\" --headless --disable-gpu --hide-scrollbars --virtual-time-budget=8000 --window-size=1440,3000 --screenshot=\"c:\\\\tmp\\\\partners3.png\" \"http://localhost:5176/\")",
-      "Bash(python -c ' *)"
+      "Bash(npx oxlint *)",
+      "PowerShell(Set-Location \"c:\\\\github\\\\penmai\"; npm uninstall sharp 2>&1 | Select-Object -Last 2; \"--- killing my dev server \\(5182\\) ---\"; Get-NetTCPConnection -LocalPort 5182 -State Listen -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue; \"stopped PID $_\" })",
+      "Bash(grep -iE \"\\\\.env|secret|credential|\\\\.pem$|\\\\.key$|id_rsa|\\\\.p12|serviceaccount\")",
+      "Bash(git grep *)",
+      "Bash(grep -viE \"placeholder|example|your-|//|/\\\\*\")",
+      "Bash(npm ci *)",
+      "Bash(GITHUB_ACTIONS=true npm run build)"
     ]
   }
 }

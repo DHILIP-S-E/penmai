@@ -211,6 +211,98 @@ button {
   transform: translateY(-1px);
 }
 
+/* Hover border gradient button (see components/HoverBorderGradient.jsx) */
+.hbg-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px; /* border thickness — the sweep shows through here */
+  border: none;
+  border-radius: 9999px;
+  background: var(--color-border);
+  box-shadow: 0 4px 15px rgba(239, 21, 94, 0.2);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hbg-container:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(239, 21, 94, 0.35);
+}
+
+.hbg-container:active {
+  transform: translateY(-1px);
+}
+
+/*
+ * A square big enough that its inscribed circle covers the pill's corners, spun
+ * under the content and clipped by the container's overflow. Sized off the
+ * diagonal so the arc never reveals an empty edge mid-rotation.
+ */
+.hbg-border {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  aspect-ratio: 1;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    var(--color-pink) 50deg,
+    var(--color-violet) 90deg,
+    var(--color-purple) 130deg,
+    transparent 190deg,
+    transparent 360deg
+  );
+  transform: translate(-50%, -50%) rotate(0deg);
+  animation: hbgSweep var(--hbg-duration, 2.5s) linear infinite;
+}
+
+.hbg-container:hover .hbg-border {
+  animation-duration: calc(var(--hbg-duration, 2.5s) / 2.5);
+}
+
+@keyframes hbgSweep {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.hbg-content {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 28px;
+  border-radius: 9999px;
+  background: var(--color-pink);
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.hbg-container:hover .hbg-content {
+  background: var(--color-text-primary);
+}
+
+/* Hero CTA sits next to the smaller Watch Trailer button */
+.hero-cta-row .hbg-content {
+  font-size: 13px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hbg-border,
+  .hbg-container:hover .hbg-border {
+    animation: none;
+  }
+}
+
 /* Solid Color Text (no gradients) */
 .text-gradient {
   color: var(--color-pink);
@@ -345,6 +437,15 @@ button {
 }
 
 /* Responsive Timeline Styles */
+/* Scatter groups fan their items far outside the row mid-animation. Clip at the
+   section box (full-bleed, so the cut lands at the viewport edge and is unseen)
+   rather than letting the document gain a horizontal scrollbar.
+   `clip` not `hidden`: hidden would make these scroll containers and break
+   overflow-y, and would also trap the sticky header's ancestors. */
+section {
+  overflow-x: clip;
+}
+
 .timeline-wrapper {
   position: relative;
   max-width: 720px;
@@ -370,7 +471,10 @@ button {
   position: relative;
 }
 
-.timeline-item:nth-child(even) {
+/* Items are wrapped in a scatter group, so they are children 1..n of that group.
+   Before the wrapper they sat after .timeline-line and started at child 2 —
+   hence odd here, to keep each card on the side it has always been on. */
+.timeline-item:nth-child(odd) {
   flex-direction: row-reverse;
 }
 
@@ -451,6 +555,75 @@ button {
   right: 12px;
   border-top: 2px dashed rgba(239, 21, 94, 0.3);
   z-index: 5;
+}
+
+/* Floating pill navigation (see components/FloatingNav.jsx) */
+.floating-nav {
+  position: fixed;
+  top: 16px;
+  /* Centred via auto margins, not translateX(-50%): framer-motion owns
+     `transform` on this element to animate the hide/reveal. */
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: fit-content;
+  max-width: calc(100vw - 24px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 8px 8px 8px 20px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.floating-nav__logo {
+  font-family: 'Sora', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-pink);
+  white-space: nowrap;
+}
+
+.floating-nav__links {
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.floating-nav__link {
+  color: var(--color-text-secondary);
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+.floating-nav__link:hover {
+  color: var(--color-pink);
+}
+
+.floating-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 991px) {
+  .floating-nav {
+    gap: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-nav {
+    transform: none !important;
+    opacity: 1 !important;
+  }
 }
 
 /* Mobile Sidebar Menu (Drawer) styles */
@@ -642,7 +815,7 @@ button {
   }
 
   /* --- BUTTONS --- */
-  .btn-gradient, .btn-outline {
+  .btn-gradient, .btn-outline, .hbg-content {
     padding: 9px 20px;
     font-size: 13px;
   }
@@ -664,7 +837,7 @@ button {
     padding-left: 45px;
   }
 
-  .timeline-item:nth-child(even) {
+  .timeline-item:nth-child(odd) {
     flex-direction: row !important;
   }
 
@@ -701,8 +874,72 @@ button {
     padding: 0 12px;
   }
 
-  .btn-gradient, .btn-outline {
+  .btn-gradient, .btn-outline, .hbg-content {
     padding: 9px 18px;
     font-size: 12px;
+  }
+}
+
+/* Animated gradient card border — see components/BackgroundGradient.jsx */
+.bg-gradient-container {
+  position: relative;
+  padding: 4px;
+  border-radius: 22px;
+  height: 100%;
+}
+
+.bg-gradient-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 22px;
+  background-image:
+    radial-gradient(circle farthest-side at 0 100%, var(--color-pink), transparent),
+    radial-gradient(circle farthest-side at 100% 0, var(--color-purple), transparent),
+    radial-gradient(circle farthest-side at 100% 100%, var(--color-violet), transparent),
+    radial-gradient(circle farthest-side at 0 0, var(--color-pink), var(--color-lavender));
+  background-size: 400% 400%;
+  background-position: 0 50%;
+  will-change: background-position;
+}
+
+.bg-gradient-animate {
+  animation: bg-gradient-drift 5s ease-in-out infinite alternate;
+}
+
+@keyframes bg-gradient-drift {
+  from { background-position: 0 50%; }
+  to   { background-position: 100% 50%; }
+}
+
+.bg-gradient-glow {
+  filter: blur(16px);
+  opacity: 0.35;
+  transition: opacity 0.5s ease;
+}
+
+.bg-gradient-container:hover .bg-gradient-glow {
+  opacity: 0.75;
+}
+
+/* The card sits on top of the edge layer, which reads as the border itself. */
+.bg-gradient-edge {
+  opacity: 0.85;
+  transition: opacity 0.5s ease;
+}
+
+.bg-gradient-container:hover .bg-gradient-edge {
+  opacity: 1;
+}
+
+.bg-gradient-content {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-gradient-animate {
+    animation: none;
   }
 }
