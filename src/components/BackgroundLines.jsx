@@ -55,11 +55,17 @@ const pathVariants = {
   }
 };
 
-// Deterministic stand-in for upstream's Math.random() stagger.
-const delayFor = (idx) => (idx * 7) % 10;
-const repeatDelayFor = (idx) => ((idx * 3) % 10) + 2;
+// Deterministic stand-in for upstream's Math.random() stagger. `layer` keeps
+// the two stacked copies of the path set from firing in unison.
+const delayFor = (idx, layer) => ((idx * 7) + layer * 5) % 10;
+const repeatDelayFor = (idx, layer) => (((idx * 3) + layer * 4) % 10) + 2;
 
-const BackgroundLines = ({ duration = 10, opacity = 0.5, style = {} }) => (
+// Upstream stacks the path set twice to double the streak density; both
+// layers are kept here since this sits in a hero column rather than across
+// a full viewport, so there is less room for streaks to land.
+const LAYERS = [0, 1];
+
+const BackgroundLines = ({ duration = 10, opacity = 0.5, strokeWidth = 2.3, style = {} }) => (
   <motion.svg
     viewBox="0 0 1440 900"
     fill="none"
@@ -78,26 +84,28 @@ const BackgroundLines = ({ duration = 10, opacity = 0.5, style = {} }) => (
       ...style
     }}
   >
-    {PATHS.map((path, idx) => (
-      <motion.path
-        key={'bg-line-' + idx}
-        d={path}
-        stroke={COLORS[idx % COLORS.length]}
-        strokeWidth="2.3"
-        strokeLinecap="round"
-        variants={pathVariants}
-        initial="initial"
-        animate="animate"
-        transition={{
-          duration,
-          ease: 'linear',
-          repeat: Infinity,
-          repeatType: 'loop',
-          delay: delayFor(idx),
-          repeatDelay: repeatDelayFor(idx)
-        }}
-      />
-    ))}
+    {LAYERS.map((layer) =>
+      PATHS.map((path, idx) => (
+        <motion.path
+          key={'bg-line-' + layer + '-' + idx}
+          d={path}
+          stroke={COLORS[idx % COLORS.length]}
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          variants={pathVariants}
+          initial="initial"
+          animate="animate"
+          transition={{
+            duration,
+            ease: 'linear',
+            repeat: Infinity,
+            repeatType: 'loop',
+            delay: delayFor(idx, layer),
+            repeatDelay: repeatDelayFor(idx, layer)
+          }}
+        />
+      ))
+    )}
   </motion.svg>
 );
 

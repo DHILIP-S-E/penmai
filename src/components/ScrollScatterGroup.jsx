@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect, Children } from 'react';
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { motion, useTransform, useReducedMotion } from 'framer-motion';
+import { useSmoothScrollProgress } from './motion';
 
 // Below this width the grids collapse to a single column, so a full-strength
 // horizontal fan would throw items far off-screen. Scale it right down.
@@ -71,11 +72,7 @@ export default function ScrollScatterGroup({
   const ref = useRef(null);
   const prefersReducedMotion = useReducedMotion();
   const spreadFactor = useSpreadFactor();
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'center center']
-  });
+  const scrollYProgress = useSmoothScrollProgress(ref);
 
   const items = Children.toArray(children);
   const centerIndex = (items.length - 1) / 2;

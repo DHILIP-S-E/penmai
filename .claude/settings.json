@@ -10,7 +10,12 @@
       "Bash(git grep *)",
       "Bash(grep -viE \"placeholder|example|your-|//|/\\\\*\")",
       "Bash(npm ci *)",
-      "Bash(GITHUB_ACTIONS=true npm run build)"
+      "Bash(GITHUB_ACTIONS=true npm run build)",
+      "Bash(git push *)",
+      "Bash(grep -nE \"<section|ScrollScatterGroup|ScrollScatterText|AnimatedSection|CrowdCanvas|NeuralNetBackground|BackgroundLines|BackgroundGradient|TextGenerateEffect|EventGallery|AttendingFrameGenerator|FloatingNav|HoverBorderGradient|\\\\{/\\\\* \" src/views/LandingPage.jsx)",
+      "Bash(node spring.mjs)",
+      "Bash(sed -i \"s|const URL = 'http://localhost:5177/';|const URL = 'http://localhost:4173/';|\" verify4.mjs)",
+      "Bash(node verify4.mjs)"
     ]
   }
 }

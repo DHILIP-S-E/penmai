@@ -765,6 +765,12 @@ section {
     padding: 28px 0 !important;
   }
 
+  /* .floating-nav is fixed, so it reserves no space in flow. Clear its
+     footprint (top 16px + 54px tall) or the hero h1 renders underneath it. */
+  .hero-section {
+    padding-top: 86px !important;
+  }
+
   /* Hero two-column grid → single column */
   section .container > div[style] {
     grid-template-columns: 1fr !important;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Calendar, MapPin, Clock, Users, Star, HelpCircle,
   ChevronDown, ChevronUp, Play, Sparkles, Award, Compass,
@@ -11,10 +11,9 @@ import { showToast } from '../components/Toast';
 import AttendingFrameGenerator from '../components/AttendingFrameGenerator';
 import CrowdCanvas from '../components/CrowdCanvas';
 import NumberFlow from '@number-flow/react';
-import { useScroll } from 'framer-motion';
-import NeuralNetBackground from '../components/NeuralNetBackground';
 import ScrollScatterText from '../components/ScrollScatterText';
 import ScrollScatterGroup from '../components/ScrollScatterGroup';
+import ScrollReveal from '../components/ScrollReveal';
 import EventGallery from '../components/EventGallery';
 import BackgroundGradient from '../components/BackgroundGradient';
 import HoverBorderGradient from '../components/HoverBorderGradient';
@@ -88,42 +87,6 @@ const MemberAvatar = ({ name, size = 64 }) => {
   );
 };
 
-// ─── Scroll Reveal Hook ────────────────────────────────────────────────────
-const useScrollReveal = (options = {}) => {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
-      { threshold: 0.12, ...options }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-  return [ref, visible];
-};
-
-// ─── Animated Section Wrapper ──────────────────────────────────────────────
-const AnimatedSection = ({ children, delay = 0, direction = 'up', className = '', style = {} }) => {
-  const [ref, visible] = useScrollReveal();
-  const translateMap = { up: 'translateY(40px)', down: 'translateY(-40px)', left: 'translateX(-40px)', right: 'translateX(40px)' };
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'translate(0)' : translateMap[direction],
-        transition: `opacity 0.7s ease ${delay}ms, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
-        ...style
-      }}
-    >
-      {children}
-    </div>
-  );
-};
 
 const WomenSilhouetteIllustration = () => (
   <svg viewBox="0 0 400 150" width="100%" height="100%" style={{ overflow: 'visible' }}>
@@ -211,11 +174,6 @@ const FAQS = [
 ];
 
 export default function LandingPage() {
-  const themesRef = useRef(null);
-  const { scrollYProgress: themesScrollProgress } = useScroll({
-    target: themesRef,
-    offset: ["start end", "end start"]
-  });
 
   const [timeLeft, setTimeLeft] = useState({ days: 10, hours: 8, minutes: 45, seconds: 30 });
   const [openFaq, setOpenFaq] = useState(null);
@@ -349,7 +307,7 @@ export default function LandingPage() {
 
       {/* Hero Section — top padding clears the fixed FloatingNav, which
           (unlike the sticky header it replaced) takes up no space in flow. */}
-      <section style={{ padding: '104px 0 48px', position: 'relative' }}>
+      <section className="hero-section" style={{ padding: '104px 0 48px', position: 'relative' }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.85fr', gap: '24px', alignItems: 'center' }}>
             
@@ -420,7 +378,7 @@ export default function LandingPage() {
             {/* Right side poster high-resolution VR Girl image with floating glass elements */}
             <div className="hero-image-col" style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               {/* Radiating animated lines behind the poster */}
-              <BackgroundLines opacity={0.45} style={{ zIndex: 0 }} />
+              <BackgroundLines opacity={0.85} strokeWidth={3} style={{ zIndex: 0 }} />
 
               {/* Backing decorative circles to match poster layout */}
               <div className="spin-slow" style={{ position: 'absolute', width: '520px', height: '520px', borderRadius: '50%', border: '1.5px dashed var(--color-pink)', opacity: 0.5, zIndex: 0 }} />
@@ -430,6 +388,12 @@ export default function LandingPage() {
                   src={vrGirlImage}
                   alt="PenmAI 2.0 VR Girl"
                   className="float-animation"
+                  // This is the LCP element: load it eagerly at high priority and
+                  // give intrinsic dimensions so it reserves space without shifting.
+                  width="440"
+                  height="440"
+                  fetchPriority="high"
+                  decoding="async"
                   style={{ width: '100%', height: 'auto', maxWidth: '440px', display: 'block', objectFit: 'contain' }}
                 />
                 
@@ -486,7 +450,7 @@ export default function LandingPage() {
       {/* About Section */}
       <section id="about" style={{ padding: '80px 0', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container" style={{ maxWidth: '900px' }}>
-          <AnimatedSection direction="up">
+          <ScrollReveal direction="up">
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <span className="section-label"><Sparkles size={10} />About</span>
               <h2 style={{ fontSize: '34px', marginBottom: '16px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
@@ -496,7 +460,7 @@ export default function LandingPage() {
                 PenmAI 2.0 is a community initiative to build open, inclusive and impactful solutions. Curated to empower women technologists in distributed intelligence, machine learning systems, and software engineering.
               </p>
             </div>
-          </AnimatedSection>
+          </ScrollReveal>
           <ScrollScatterGroup style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
             {[
               { icon: <Award size={22} color="var(--color-pink)" />, title: 'Our Mission', desc: 'Deliver coding sandboxes and expand student software pathways.' },
@@ -520,7 +484,6 @@ export default function LandingPage() {
       {/* Themes */}
       <section
         id="themes"
-        ref={themesRef}
         style={{
           padding: '80px 0',
           background: 'rgba(124, 58, 237, 0.02)',
@@ -529,9 +492,8 @@ export default function LandingPage() {
           overflow: 'hidden'
         }}
       >
-        <NeuralNetBackground scrollYProgress={themesScrollProgress} />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <AnimatedSection direction="up">
+          <ScrollReveal direction="up">
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <span className="section-label"><Cpu size={10} />Focus Areas</span>
               <h2 style={{ fontSize: '32px', marginBottom: '10px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
@@ -539,7 +501,7 @@ export default function LandingPage() {
               </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>Core focus domains curating the sessions</p>
             </div>
-          </AnimatedSection>
+          </ScrollReveal>
           <ScrollScatterGroup style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '28px' }}>
             {THEMES.map((theme, i) => (
               <div key={i}>
@@ -568,7 +530,7 @@ export default function LandingPage() {
       {/* Highlights */}
       <section id="highlights" style={{ padding: '80px 0', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container">
-          <AnimatedSection direction="up">
+          <ScrollReveal direction="up">
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <span className="section-label"><Star size={10} />Highlights</span>
               <h2 style={{ fontSize: '32px', marginBottom: '10px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
@@ -576,7 +538,7 @@ export default function LandingPage() {
               </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>Key event offerings for participants</p>
             </div>
-          </AnimatedSection>
+          </ScrollReveal>
           <ScrollScatterGroup style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px' }}>
             {HIGHLIGHTS.map((item, i) => (
               <div key={i}>
@@ -598,7 +560,7 @@ export default function LandingPage() {
       {/* Past Event Gallery */}
       <section id="gallery" style={{ padding: '80px 0', background: 'rgba(124, 58, 237, 0.01)', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container">
-          <AnimatedSection direction="up">
+          <ScrollReveal direction="up">
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <span className="section-label"><Camera size={10} />Gallery</span>
               <h2 style={{ fontSize: '32px', marginBottom: '10px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
@@ -608,7 +570,7 @@ export default function LandingPage() {
               </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>A look back at the community we have built together</p>
             </div>
-          </AnimatedSection>
+          </ScrollReveal>
           <EventGallery />
         </div>
       </section>
@@ -655,18 +617,18 @@ export default function LandingPage() {
       {/* Featured Speakers */}
       <section id="speakers" style={{ padding: '80px 0', background: 'rgba(124, 58, 237, 0.01)', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container">
-          <AnimatedSection direction="up">
+          <ScrollReveal direction="up">
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <span className="section-label"><Users size={10} />Speakers</span>
               <h2 style={{ fontSize: '32px', marginBottom: '10px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
-                <ScrollScatterText className="section-heading-underline" text="Featured Speakers" />
+                <span className="section-heading-underline">Featured Speakers</span>
               </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>Technical cohort leads guiding the sessions</p>
             </div>
-          </AnimatedSection>
-          <ScrollScatterGroup style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '28px' }}>
+          </ScrollReveal>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '28px' }}>
             {SPEAKERS.map((s, i) => (
-              <div key={i}>
+              <ScrollReveal key={i} direction="up" delay={i * 60}>
                 <BackgroundGradient>
                   <div className="glass-premium" style={{ textAlign: 'center', padding: '32px 24px', height: '100%', background: 'white' }}>
                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px', position: 'relative' }}>
@@ -691,16 +653,16 @@ export default function LandingPage() {
                     </div>
                   </div>
                 </BackgroundGradient>
-              </div>
+              </ScrollReveal>
             ))}
-          </ScrollScatterGroup>
+          </div>
         </div>
       </section>
 
       {/* Meet the Mentors */}
       <section id="mentors" style={{ padding: '80px 0', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container">
-          <AnimatedSection direction="up">
+          <ScrollReveal direction="up">
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <span className="section-label"><UserCheck size={10} />Mentors</span>
               <h2 style={{ fontSize: '32px', marginBottom: '10px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
@@ -708,7 +670,7 @@ export default function LandingPage() {
               </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>Book 1-on-1 advisor slots with regional developers and directors</p>
             </div>
-          </AnimatedSection>
+          </ScrollReveal>
           <ScrollScatterGroup style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
             {MENTORS.map((m, i) => (
               <div key={i}>
@@ -739,7 +701,7 @@ export default function LandingPage() {
       {/* Timeline Section */}
       <section id="schedule" style={{ padding: '80px 0', background: 'rgba(124, 58, 237, 0.01)', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container">
-          <AnimatedSection direction="up">
+          <ScrollReveal direction="up">
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <span className="section-label"><Clock size={10} />Schedule</span>
               <h2 style={{ fontSize: '32px', marginBottom: '12px', letterSpacing: '-0.01em', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
@@ -747,7 +709,7 @@ export default function LandingPage() {
               </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>Follow the chronological progression of PenmAI 2.0</p>
             </div>
-          </AnimatedSection>
+          </ScrollReveal>
 
           <div className="timeline-wrapper">
             {/* Vertical timeline line */}
@@ -775,7 +737,7 @@ export default function LandingPage() {
       {/* Attending Frame Generator */}
       <section id="frame" style={{ padding: '80px 0', background: 'rgba(239,21,94,0.03)', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container">
-          <AnimatedSection direction="up">
+          <ScrollReveal direction="up">
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <span className="section-label"><Camera size={10} />Share</span>
               <h2 style={{ fontSize: '32px', marginBottom: '10px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
@@ -783,12 +745,12 @@ export default function LandingPage() {
               </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>Upload your photo, add your name, and share that you are attending PenmAI 2026!</p>
             </div>
-          </AnimatedSection>
-          <AnimatedSection direction="up" delay={150}>
+          </ScrollReveal>
+          <ScrollReveal direction="up" delay={150}>
             <div className="glass-premium" style={{ padding: '40px' }}>
               <AttendingFrameGenerator />
             </div>
-          </AnimatedSection>
+          </ScrollReveal>
         </div>
       </section>
 

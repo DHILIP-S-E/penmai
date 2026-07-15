@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { motion, useTransform, useReducedMotion } from 'framer-motion';
+import { useSmoothScrollProgress } from './motion';
 
 // Each character starts pushed away from the centre of the word and converges
 // into place as the heading scrolls into view.
@@ -43,11 +44,7 @@ export default function ScrollScatterText({
 }) {
   const ref = useRef(null);
   const prefersReducedMotion = useReducedMotion();
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'center center']
-  });
+  const scrollYProgress = useSmoothScrollProgress(ref);
 
   const characters = text.split('');
   const centerIndex = (characters.length - 1) / 2;
