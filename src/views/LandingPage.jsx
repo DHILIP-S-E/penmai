@@ -37,10 +37,10 @@ const NAV_ITEMS = [
 import speakerPriyankaSen from '../assets/speaker_priyanka_sen.png';
 
 // Import theme illustrations (these files still exist)
-import themeDigitalSkills from '../assets/theme_digital_skills.png';
-import themeHealthTech from '../assets/theme_healthtech.png';
-import themeEntrepreneurship from '../assets/theme_entrepreneurship.png';
-import themeAIInnovation from '../assets/theme_ai_innovation.png';
+import themeDigitalSkills from '../assets/theme_digital_skills.webp';
+import themeHealthTech from '../assets/theme_healthtech.webp';
+import themeEntrepreneurship from '../assets/theme_entrepreneurship.webp';
+import themeAIInnovation from '../assets/theme_ai_innovation.webp';
 
 // Import partner/sponsor logos (whitespace-trimmed, transparent PNGs)
 import logoOpenMadurai from '../assets/sponsors/openmadurai.png';
@@ -497,17 +497,17 @@ export default function LandingPage() {
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <span className="section-label"><Cpu size={10} />Focus Areas</span>
               <h2 style={{ fontSize: '32px', marginBottom: '10px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
-                <ScrollScatterText className="section-heading-underline" text="Themes" />
+                <span className="section-heading-underline">Themes</span>
               </h2>
               <p style={{ color: 'var(--color-text-secondary)' }}>Core focus domains curating the sessions</p>
             </div>
           </ScrollReveal>
-          <ScrollScatterGroup style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '28px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '28px' }}>
             {THEMES.map((theme, i) => (
-              <div key={i}>
+              <ScrollReveal key={i} direction="up" delay={i * 60}>
                 <GlassCard interactive={true} style={{ padding: '0', overflow: 'hidden', display: 'flex', flexDirection: 'column', borderRadius: '20px', background: 'white' }}>
                   <div className="theme-card-image-container">
-                    <img src={theme.image} alt={theme.name} className="theme-card-image" />
+                    <img src={theme.image} alt={theme.name} className="theme-card-image" loading="lazy" decoding="async" width="880" height="360" />
                     <div style={{ position: 'absolute', bottom: 12, left: 12, display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                       {theme.tags.map((tag, idx) => (
                         <span key={idx} style={{ fontSize: '9px', background: 'rgba(255, 255, 255, 0.95)', color: 'var(--color-pink)', padding: '3px 10px', borderRadius: '6px', fontWeight: '800', border: '1px solid rgba(239, 21, 94, 0.15)' }}>
@@ -521,9 +521,9 @@ export default function LandingPage() {
                     <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: 1.55 }}>{theme.desc}</p>
                   </div>
                 </GlassCard>
-              </div>
+              </ScrollReveal>
             ))}
-          </ScrollScatterGroup>
+          </div>
         </div>
       </section>
 
