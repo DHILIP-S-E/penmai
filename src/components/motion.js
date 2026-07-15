@@ -1,3 +1,4 @@
+import { createContext, useContext } from 'react';
 import { useScroll, useSpring } from 'framer-motion';
 
 /**
@@ -8,10 +9,8 @@ import { useScroll, useSpring } from 'framer-motion';
  * The Skiper31 original hides this by running Lenis, which interpolates scroll
  * into a smooth stream. Rather than take over native scrolling site-wide, we
  * damp the progress value itself: same silky result, scroll stays untouched.
- *
- * Every scroll-driven component pulls its progress from here, so headings,
- * cards and reveals in a section all resolve together instead of drifting.
  */
+
 /*
  * Tuned to be critically damped: damping ratio = damping / (2 * sqrt(stiffness))
  * = 35 / (2 * sqrt(300)) ~= 1.0. That is the fastest settle with no overshoot.
@@ -34,3 +33,20 @@ export const useSmoothScrollProgress = (ref, offset = SCROLL_OFFSET) => {
   const { scrollYProgress } = useScroll({ target: ref, offset });
   return useSpring(scrollYProgress, SCROLL_SPRING);
 };
+
+/**
+ * One scroll tracker per section, shared by everything inside it.
+ *
+ * Each useScroll instance re-measures its target's geometry on every scroll.
+ * With a tracker per heading, per card grid and per reveal that reached ~30
+ * independent measurements per scroll, and Lighthouse attributed 2275ms of
+ * Style & Layout to it. Sharing one progress per section collapses that to one
+ * measurement, and has the side benefit that a heading and its cards are
+ * driven by literally the same value, so they cannot drift apart.
+ *
+ * A null value means "no provider above me" — components fall back to tracking
+ * themselves, so they still work outside a ScrollSection.
+ */
+export const ScrollProgressContext = createContext(null);
+
+export const useSharedScrollProgress = () => useContext(ScrollProgressContext);

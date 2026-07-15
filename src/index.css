@@ -103,6 +103,8 @@ button {
 
 /* Glassmorphism Styles */
 .glass-panel {
+  /* Anchors the absolutely-positioned .glow-effect overlay. */
+  position: relative;
   background: var(--color-card-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -114,8 +116,63 @@ button {
 
 .glass-panel:hover {
   background: var(--color-card-bg-hover);
-  border-color: var(--color-border-hover);
   box-shadow: var(--shadow-md);
+}
+
+/* Pointer-tracking border glow (see components/GlowingEffect.jsx).
+   Replaces the old pink border-colour swap on card hover. */
+.glow-effect {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  /* Must stay inert: the card underneath owns the clicks, and GlowingEffect
+     attaches its pointer listeners to that card rather than to this overlay. */
+  pointer-events: none;
+  /* Above the card's own content. GlowingEffect mounts as the first child, so
+     without this the ring paints under anything that reaches the card's edge —
+     the theme card's cover image hid it completely. */
+  z-index: 10;
+  opacity: var(--glow-active, 0);
+  transition: opacity 0.3s ease;
+}
+
+.glow-effect__layer {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  /* Ring the border only: paint the gradient across the whole box, then punch
+     out everything inside the --glow-width padding. */
+  padding: var(--glow-width, 2px);
+  background: conic-gradient(
+    from calc(var(--glow-start, 0) * 1deg),
+    transparent 0deg,
+    var(--color-pink) 40deg,
+    var(--color-violet) 75deg,
+    var(--color-purple) 110deg,
+    transparent 150deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
+
+.glow-effect__bloom {
+  filter: blur(6px);
+  opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow-effect {
+    transition: none;
+  }
+
+  /* No pointer chase, so a rotating conic would just sit at 0deg with a bald
+     patch. Light the whole ring evenly instead. */
+  .glow-effect__layer {
+    background: var(--color-pink);
+  }
 }
 
 .glass-card-interactive {
@@ -125,7 +182,6 @@ button {
 .glass-card-interactive:hover {
   transform: translateY(-6px);
   box-shadow: var(--shadow-lg);
-  border-color: var(--color-pink);
 }
 
 /* Theme card image zoom */
@@ -397,6 +453,8 @@ button {
 
 /* Glassmorphism card premium */
 .glass-premium {
+  /* Anchors the absolutely-positioned .glow-effect overlay. */
+  position: relative;
   background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -408,7 +466,6 @@ button {
 
 .glass-premium:hover {
   background: rgba(255, 255, 255, 0.88);
-  border-color: rgba(239, 21, 94, 0.25);
   box-shadow: 0 16px 48px rgba(239, 21, 94, 0.12), inset 0 1px 0 rgba(255,255,255,1);
 }
 
@@ -437,6 +494,15 @@ button {
 }
 
 /* Responsive Timeline Styles */
+/* Infinite animations are paused while off-screen (see
+   usePauseOffscreenAnimations). Covers ::after so the heading shimmer stops too —
+   a pseudo-element cannot be reached from JS. */
+.anim-paused,
+.anim-paused::after,
+.anim-paused::before {
+  animation-play-state: paused !important;
+}
+
 /* Scatter groups fan their items far outside the row mid-animation. Clip at the
    section box (full-bleed, so the cut lands at the viewport edge and is unseen)
    rather than letting the document gain a horizontal scrollbar.
@@ -500,6 +566,8 @@ section {
 }
 
 .timeline-card {
+  /* Anchors the absolutely-positioned .glow-effect overlay. */
+  position: relative;
   width: 45%;
   background: white;
   padding: 20px;

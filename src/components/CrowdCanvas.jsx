@@ -271,12 +271,35 @@ export default function CrowdCanvas({ rows = 4, cols = 4 }) {
     };
 
     let isMounted = true;
+    let ticking = false;
+    let ready = false;
+
+    // The canvas sits near the page foot but the ticker used to run from load
+    // onwards, redrawing every frame while off-screen. Only render when visible.
+    const startTicker = () => {
+      if (!ticking && ready && isMounted) {
+        gsap.ticker.add(render);
+        ticking = true;
+      }
+    };
+    const stopTicker = () => {
+      if (ticking) {
+        gsap.ticker.remove(render);
+        ticking = false;
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => (entry.isIntersecting ? startTicker() : stopTicker()),
+      { rootMargin: '100px' }
+    );
 
     const init = () => {
       if (!isMounted) return;
       createPeeps();
       resize();
-      gsap.ticker.add(render);
+      ready = true;
+      observer.observe(canvas);
     };
 
     img.onload = init;
@@ -290,8 +313,9 @@ export default function CrowdCanvas({ rows = 4, cols = 4 }) {
     return () => {
       isMounted = false;
       img.onload = null;
+      observer.disconnect();
       window.removeEventListener("resize", handleResize);
-      gsap.ticker.remove(render);
+      stopTicker();
       crowd.forEach((peep) => peep.walk && peep.walk.kill());
     };
   }, [rows, cols]);

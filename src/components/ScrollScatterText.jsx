@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
 import { motion, useTransform, useReducedMotion } from 'framer-motion';
-import { useSmoothScrollProgress } from './motion';
+import { useSmoothScrollProgress, useSharedScrollProgress } from './motion';
 
 // Each character starts pushed away from the centre of the word and converges
-// into place as the heading scrolls into view.
+// into place as the section scrolls into view.
 const Character = ({ char, index, centerIndex, scrollYProgress, spread, rotate }) => {
   const isSpace = char === ' ';
   const distanceFromCenter = index - centerIndex;
@@ -24,38 +24,18 @@ const Character = ({ char, index, centerIndex, scrollYProgress, spread, rotate }
         willChange: 'transform, opacity'
       }}
     >
-      {isSpace ? ' ' : char}
+      {isSpace ? ' ' : char}
     </motion.span>
   );
 };
 
-/**
- * Scroll-driven per-character scatter for section headings.
- * Adapted from Skiper31 / CharacterV1 (@gurvinder-singh02, https://gxuri.me) —
- * the original drives progress off a 210vh pinned section; here the heading's own
- * viewport entry drives it instead.
- */
-export default function ScrollScatterText({
-  text,
-  className = '',
-  spread = 50,
-  rotate = 50,
-  style = {}
-}) {
-  const ref = useRef(null);
-  const prefersReducedMotion = useReducedMotion();
-  const scrollYProgress = useSmoothScrollProgress(ref);
-
+const Scatter = ({ text, className, style, spread, rotate, progress, elRef }) => {
   const characters = text.split('');
   const centerIndex = (characters.length - 1) / 2;
 
-  if (prefersReducedMotion) {
-    return <span className={className} style={style}>{text}</span>;
-  }
-
   return (
     <span
-      ref={ref}
+      ref={elRef}
       className={className}
       style={{
         // perspective and the absolutely-positioned label below both need these;
@@ -87,11 +67,44 @@ export default function ScrollScatterText({
           char={char}
           index={index}
           centerIndex={centerIndex}
-          scrollYProgress={scrollYProgress}
+          scrollYProgress={progress}
           spread={spread}
           rotate={rotate}
         />
       ))}
     </span>
   );
+};
+
+// Used only outside a ScrollSection: tracks its own position.
+const Standalone = (props) => {
+  const ref = useRef(null);
+  const progress = useSmoothScrollProgress(ref);
+  return <Scatter {...props} progress={progress} elRef={ref} />;
+};
+
+/**
+ * Scroll-driven per-character scatter for section headings.
+ * Adapted from Skiper31 / CharacterV1 (@gurvinder-singh02, https://gxuri.me) —
+ * the original drives progress off a 210vh pinned section; here it comes from
+ * the enclosing ScrollSection, so the heading and its cards share one value.
+ */
+export default function ScrollScatterText({
+  text,
+  className = '',
+  spread = 50,
+  rotate = 50,
+  style = {}
+}) {
+  const prefersReducedMotion = useReducedMotion();
+  const shared = useSharedScrollProgress();
+
+  if (prefersReducedMotion) {
+    return <span className={className} style={style}>{text}</span>;
+  }
+
+  const props = { text, className, style, spread, rotate };
+  return shared
+    ? <Scatter {...props} progress={shared} />
+    : <Standalone {...props} />;
 }

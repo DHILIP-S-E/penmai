@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, Children } from 'react';
 import { motion, useTransform, useReducedMotion } from 'framer-motion';
-import { useSmoothScrollProgress } from './motion';
+import { useSmoothScrollProgress, useSharedScrollProgress } from './motion';
 
 // Below this width the grids collapse to a single column, so a full-strength
 // horizontal fan would throw items far off-screen. Scale it right down.
@@ -48,12 +48,43 @@ const Item = ({ child, index, centerIndex, scrollYProgress, spread, rotate, lift
   );
 };
 
+const Group = ({ children, className, style, spread, rotate, lift, itemClassName, progress, elRef }) => {
+  const spreadFactor = useSpreadFactor();
+  const items = Children.toArray(children);
+  const centerIndex = (items.length - 1) / 2;
+  const effectiveSpread = spread * spreadFactor;
+
+  return (
+    <div ref={elRef} className={className} style={style}>
+      {items.map((child, index) => (
+        <Item
+          key={index}
+          child={child}
+          index={index}
+          centerIndex={centerIndex}
+          scrollYProgress={progress}
+          spread={effectiveSpread}
+          rotate={rotate}
+          lift={lift}
+          itemClassName={itemClassName}
+        />
+      ))}
+    </div>
+  );
+};
+
+// Used only outside a ScrollSection: tracks its own position.
+const Standalone = (props) => {
+  const ref = useRef(null);
+  const progress = useSmoothScrollProgress(ref);
+  return <Group {...props} progress={progress} elRef={ref} />;
+};
+
 /**
- * Scroll-driven scatter for a row/grid of elements — the element-level counterpart
- * to ScrollScatterText. Adapted from Skiper31 / CharacterV3 (@gurvinder-singh02,
- * https://gxuri.me), which scatters an array of items by each one's distance from
- * the centre index. Progress is driven by the group entering the viewport rather
- * than by the original's 210vh pinned layout.
+ * Scroll-driven scatter for a row/grid of elements — the element-level
+ * counterpart to ScrollScatterText. Adapted from Skiper31 / CharacterV3
+ * (@gurvinder-singh02, https://gxuri.me), which scatters an array of items by
+ * each one's distance from the centre index.
  *
  * Pass the grid styles in via `style` — this component renders the grid itself,
  * so each child becomes a grid item and existing layout is preserved.
@@ -69,34 +100,15 @@ export default function ScrollScatterGroup({
   // layout CSS of its own (e.g. .timeline-item) that an extra wrapper would break.
   itemClassName
 }) {
-  const ref = useRef(null);
   const prefersReducedMotion = useReducedMotion();
-  const spreadFactor = useSpreadFactor();
-  const scrollYProgress = useSmoothScrollProgress(ref);
-
-  const items = Children.toArray(children);
-  const centerIndex = (items.length - 1) / 2;
-  const effectiveSpread = spread * spreadFactor;
+  const shared = useSharedScrollProgress();
 
   if (prefersReducedMotion) {
     return <div className={className} style={style}>{children}</div>;
   }
 
-  return (
-    <div ref={ref} className={className} style={style}>
-      {items.map((child, index) => (
-        <Item
-          key={index}
-          child={child}
-          index={index}
-          centerIndex={centerIndex}
-          scrollYProgress={scrollYProgress}
-          spread={effectiveSpread}
-          rotate={rotate}
-          lift={lift}
-          itemClassName={itemClassName}
-        />
-      ))}
-    </div>
-  );
+  const props = { children, className, style, spread, rotate, lift, itemClassName };
+  return shared
+    ? <Group {...props} progress={shared} />
+    : <Standalone {...props} />;
 }

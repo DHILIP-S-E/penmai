@@ -14,12 +14,15 @@ import NumberFlow from '@number-flow/react';
 import ScrollScatterText from '../components/ScrollScatterText';
 import ScrollScatterGroup from '../components/ScrollScatterGroup';
 import ScrollReveal from '../components/ScrollReveal';
+import ScrollSection from '../components/ScrollSection';
+import usePauseOffscreenAnimations from '../components/usePauseOffscreenAnimations';
 import EventGallery from '../components/EventGallery';
 import BackgroundGradient from '../components/BackgroundGradient';
 import HoverBorderGradient from '../components/HoverBorderGradient';
 import BackgroundLines from '../components/BackgroundLines';
 import TextGenerateEffect from '../components/TextGenerateEffect';
 import FloatingNav from '../components/FloatingNav';
+import GlowingEffect from '../components/GlowingEffect';
 
 const NAV_ITEMS = [
   { name: 'About', link: '#about' },
@@ -174,6 +177,8 @@ const FAQS = [
 ];
 
 export default function LandingPage() {
+  usePauseOffscreenAnimations();
+
 
   const [timeLeft, setTimeLeft] = useState({ days: 10, hours: 8, minutes: 45, seconds: 30 });
   const [openFaq, setOpenFaq] = useState(null);
@@ -307,7 +312,7 @@ export default function LandingPage() {
 
       {/* Hero Section — top padding clears the fixed FloatingNav, which
           (unlike the sticky header it replaced) takes up no space in flow. */}
-      <section className="hero-section" style={{ padding: '104px 0 48px', position: 'relative' }}>
+      <ScrollSection className="hero-section" style={{ padding: '104px 0 48px', position: 'relative' }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.85fr', gap: '24px', alignItems: 'center' }}>
             
@@ -347,6 +352,8 @@ export default function LandingPage() {
 
               {/* Event Details Cohesive Dashboard Panel */}
               <div className="glass-panel event-detail-panel" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', padding: '12px 14px', borderRadius: '12px', border: '1px solid var(--color-border)', background: 'rgba(255, 255, 255, 0.65)', backdropFilter: 'blur(10px)', marginBottom: '24px', boxShadow: 'var(--shadow-sm)' }}>
+                {/* Absolutely positioned, so it takes no grid cell of its own. */}
+                <GlowingEffect />
                 {[
                   { icon: <Calendar size={16} color="var(--color-pink)" />, label: 'Date', value: '25-July, 2026' },
                   { icon: <Clock size={16} color="var(--color-pink)" />, label: 'Time', value: '10AM to 4PM' },
@@ -424,15 +431,16 @@ export default function LandingPage() {
 
           </div>
         </div>
-      </section>
+      </ScrollSection>
 
       {/* Partners Section */}
-      <section style={{ padding: '36px 0', background: 'rgba(255,255,255,0.5)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
+      <ScrollSection style={{ padding: '36px 0', background: 'rgba(255,255,255,0.5)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container">
           <ScrollScatterGroup style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', alignItems: 'center', gap: '20px' }} spread={70}>
               {PARTNERS.map((partner, i) => (
                 <div key={i}>
                   <div className="glass-premium partner-logo-hover" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '16px 12px' }}>
+                    <GlowingEffect />
                     <span style={{ fontSize: '8px', color: 'var(--color-text-secondary)', textTransform: 'uppercase', fontWeight: 'bold', marginBottom: '8px', letterSpacing: '0.05em' }}>{partner.role}</span>
                     {partner.logo
                       ? <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '62px', width: '100%', padding: '8px 10px', background: '#fff', borderRadius: '10px' }}>
@@ -445,10 +453,10 @@ export default function LandingPage() {
               ))}
           </ScrollScatterGroup>
         </div>
-      </section>
+      </ScrollSection>
 
       {/* About Section */}
-      <section id="about" style={{ padding: '80px 0', borderBottom: '1px solid var(--color-border)' }}>
+      <ScrollSection id="about" style={{ padding: '80px 0', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container" style={{ maxWidth: '900px' }}>
           <ScrollReveal direction="up">
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
@@ -469,6 +477,7 @@ export default function LandingPage() {
             ].map((card, i) => (
               <div key={i}>
                 <div className={`glass-premium card-hover-lift ${card.featured ? 'featured-card' : ''}`} style={{ padding: '28px 24px', border: card.featured ? '1.5px solid var(--color-pink)' : undefined, boxShadow: card.featured ? 'var(--shadow-glow)' : undefined }}>
+                  <GlowingEffect />
                   <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--color-soft-pink)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
                     {card.icon}
                   </div>
@@ -479,10 +488,10 @@ export default function LandingPage() {
             ))}
           </ScrollScatterGroup>
         </div>
-      </section>
+      </ScrollSection>
 
       {/* Themes */}
-      <section
+      <ScrollSection
         id="themes"
         style={{
           padding: '80px 0',
@@ -506,6 +515,7 @@ export default function LandingPage() {
             {THEMES.map((theme, i) => (
               <ScrollReveal key={i} direction="up" delay={i * 60}>
                 <GlassCard interactive={true} style={{ padding: '0', overflow: 'hidden', display: 'flex', flexDirection: 'column', borderRadius: '20px', background: 'white' }}>
+                  <GlowingEffect />
                   <div className="theme-card-image-container">
                     <img src={theme.image} alt={theme.name} className="theme-card-image" loading="lazy" decoding="async" width="880" height="360" />
                     <div style={{ position: 'absolute', bottom: 12, left: 12, display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
@@ -525,10 +535,10 @@ export default function LandingPage() {
             ))}
           </div>
         </div>
-      </section>
+      </ScrollSection>
 
       {/* Highlights */}
-      <section id="highlights" style={{ padding: '80px 0', borderBottom: '1px solid var(--color-border)' }}>
+      <ScrollSection id="highlights" style={{ padding: '80px 0', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container">
           <ScrollReveal direction="up">
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
@@ -544,6 +554,7 @@ export default function LandingPage() {
               <div key={i}>
                 <BackgroundGradient>
                   <div className="glass-premium" style={{ padding: '28px 24px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '12px', height: '100%', background: 'white' }}>
+                    <GlowingEffect />
                     <div style={{ background: 'var(--color-soft-pink)', padding: '12px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {item.icon}
                     </div>
@@ -555,10 +566,10 @@ export default function LandingPage() {
             ))}
           </ScrollScatterGroup>
         </div>
-      </section>
+      </ScrollSection>
 
       {/* Past Event Gallery */}
-      <section id="gallery" style={{ padding: '80px 0', background: 'rgba(124, 58, 237, 0.01)', borderBottom: '1px solid var(--color-border)' }}>
+      <ScrollSection id="gallery" style={{ padding: '80px 0', background: 'rgba(124, 58, 237, 0.01)', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container">
           <ScrollReveal direction="up">
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
@@ -573,10 +584,10 @@ export default function LandingPage() {
           </ScrollReveal>
           <EventGallery />
         </div>
-      </section>
+      </ScrollSection>
 
       {/* Who Can Participate? Banner */}
-      <section style={{ padding: '40px 0' }}>
+      <ScrollSection style={{ padding: '40px 0' }}>
         <div className="container">
           <div className="glass-panel" style={{
             background: 'var(--color-soft-pink)',
@@ -589,6 +600,7 @@ export default function LandingPage() {
             justifyContent: 'space-between',
             gap: '20px'
           }}>
+            <GlowingEffect />
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <Users size={28} color="var(--color-pink)" />
               <span style={{ fontSize: '14px', fontWeight: '800', color: 'var(--color-pink)', letterSpacing: '0.05em' }}>
@@ -612,10 +624,10 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-      </section>
+      </ScrollSection>
 
       {/* Featured Speakers */}
-      <section id="speakers" style={{ padding: '80px 0', background: 'rgba(124, 58, 237, 0.01)', borderBottom: '1px solid var(--color-border)' }}>
+      <ScrollSection id="speakers" style={{ padding: '80px 0', background: 'rgba(124, 58, 237, 0.01)', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container">
           <ScrollReveal direction="up">
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
@@ -631,6 +643,7 @@ export default function LandingPage() {
               <ScrollReveal key={i} direction="up" delay={i * 60}>
                 <BackgroundGradient>
                   <div className="glass-premium" style={{ textAlign: 'center', padding: '32px 24px', height: '100%', background: 'white' }}>
+                    <GlowingEffect />
                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px', position: 'relative' }}>
                       <div style={{ position: 'absolute', width: '98px', height: '98px', borderRadius: '50%', background: 'var(--color-soft-pink)', zIndex: 0, opacity: 0.6 }} />
                       {s.avatarImg ? (
@@ -657,10 +670,10 @@ export default function LandingPage() {
             ))}
           </div>
         </div>
-      </section>
+      </ScrollSection>
 
       {/* Meet the Mentors */}
-      <section id="mentors" style={{ padding: '80px 0', borderBottom: '1px solid var(--color-border)' }}>
+      <ScrollSection id="mentors" style={{ padding: '80px 0', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container">
           <ScrollReveal direction="up">
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
@@ -676,6 +689,7 @@ export default function LandingPage() {
               <div key={i}>
                 <BackgroundGradient>
                   <div className="glass-premium" style={{ padding: '28px 24px', textAlign: 'center', height: '100%', background: 'white' }}>
+                    <GlowingEffect />
                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px', position: 'relative' }}>
                       <div style={{ position: 'absolute', width: '72px', height: '72px', borderRadius: '50%', background: 'var(--color-soft-pink)', zIndex: 0, opacity: 0.6 }} />
                       {m.avatarImg ? (
@@ -696,10 +710,10 @@ export default function LandingPage() {
             ))}
           </ScrollScatterGroup>
         </div>
-      </section>
+      </ScrollSection>
 
       {/* Timeline Section */}
-      <section id="schedule" style={{ padding: '80px 0', background: 'rgba(124, 58, 237, 0.01)', borderBottom: '1px solid var(--color-border)' }}>
+      <ScrollSection id="schedule" style={{ padding: '80px 0', background: 'rgba(124, 58, 237, 0.01)', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container">
           <ScrollReveal direction="up">
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
@@ -721,6 +735,7 @@ export default function LandingPage() {
                 <div className="timeline-badge" />
 
                 <div className="timeline-card">
+                  <GlowingEffect />
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                     <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--color-pink)', background: 'var(--color-soft-pink)', padding: '2px 8px', borderRadius: '4px' }}>{item.time}</span>
                   </div>
@@ -732,10 +747,10 @@ export default function LandingPage() {
             </ScrollScatterGroup>
           </div>
         </div>
-      </section>
+      </ScrollSection>
 
       {/* Attending Frame Generator */}
-      <section id="frame" style={{ padding: '80px 0', background: 'rgba(239,21,94,0.03)', borderBottom: '1px solid var(--color-border)' }}>
+      <ScrollSection id="frame" style={{ padding: '80px 0', background: 'rgba(239,21,94,0.03)', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container">
           <ScrollReveal direction="up">
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
@@ -748,14 +763,15 @@ export default function LandingPage() {
           </ScrollReveal>
           <ScrollReveal direction="up" delay={150}>
             <div className="glass-premium" style={{ padding: '40px' }}>
+              <GlowingEffect />
               <AttendingFrameGenerator />
             </div>
           </ScrollReveal>
         </div>
-      </section>
+      </ScrollSection>
 
       {/* FAQ accordion */}
-      <section id="faq" style={{ padding: '100px 0', borderBottom: '1px solid var(--color-border)' }}>
+      <ScrollSection id="faq" style={{ padding: '100px 0', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container" style={{ maxWidth: '800px' }}>
           <div style={{ textAlign: 'center', marginBottom: '56px' }}>
             <h2 style={{ fontSize: '32px', color: 'var(--color-text-primary)', fontFamily: 'Sora, sans-serif' }}>
@@ -774,6 +790,7 @@ export default function LandingPage() {
                   style={{ padding: '20px', cursor: 'pointer', background: 'white', borderRadius: '12px', border: '1px solid rgba(124, 58, 237, 0.08)' }}
                   onClick={() => setOpenFaq(isOpen ? null : i)}
                 >
+                  <GlowingEffect />
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <h4 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--color-text-primary)' }}>{faq.q}</h4>
                     {isOpen ? <ChevronUp size={18} color="var(--color-pink)" /> : <ChevronDown size={18} color="var(--color-pink)" />}
@@ -788,10 +805,10 @@ export default function LandingPage() {
             })}
           </ScrollScatterGroup>
         </div>
-      </section>
+      </ScrollSection>
 
       {/* Registration / QR Ticket Section */}
-      <section id="register" style={{ padding: '100px 0', background: 'white' }}>
+      <ScrollSection id="register" style={{ padding: '100px 0', background: 'white' }}>
         <div className="container" style={{ maxWidth: '900px' }}>
           
           {registered && ticketDetails ? (
@@ -804,6 +821,7 @@ export default function LandingPage() {
 
               {/* Physical ticket mockup */}
               <div className="ticket-card" style={{ marginBottom: '32px', textAlign: 'left' }}>
+                <GlowingEffect />
                 {/* Top Half */}
                 <div style={{ padding: '24px 28px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
@@ -1000,7 +1018,7 @@ export default function LandingPage() {
             <CrowdCanvas rows={4} cols={4} />
           </div>
         </div>
-      </section>
+      </ScrollSection>
 
       {/* Simple Premium Footer */}
       <footer style={{ background: 'var(--color-text-primary)', color: 'rgba(255, 255, 255, 0.7)', padding: '60px 0 30px', borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
