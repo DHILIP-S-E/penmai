@@ -38,7 +38,7 @@ export const ToastContainer = () => {
       case 'warning':
         return <AlertTriangle className="toast-icon text-yellow-500" size={20} style={{ color: '#F59E0B' }} />;
       case 'badge':
-        return <CheckCircle className="toast-icon text-pink-500 font-bold glow-pulse" size={20} style={{ color: '#FF5CA8' }} />;
+        return <CheckCircle className="toast-icon text-pink-500 font-bold glow-pulse" size={20} style={{ color: '#ef155e' }} />;
       default:
         return <Info className="toast-icon text-purple-500" size={20} style={{ color: '#C84DFF' }} />;
     }
@@ -51,7 +51,7 @@ export const ToastContainer = () => {
       case 'warning':
         return '#F59E0B';
       case 'badge':
-        return '#FF5CA8';
+        return '#ef155e';
       default:
         return '#8B5CF6';
     }

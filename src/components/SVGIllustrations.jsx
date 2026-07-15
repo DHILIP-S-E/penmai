@@ -55,7 +55,7 @@ export const HeroAIWomanIllustration = () => (
     {/* Neural Connection lines in background */}
     <g stroke="#8B5CF6" strokeWidth="2" fill="none" opacity="0.4">
       <path d="M 120,120 L 200,80 L 240,140 M 360,100 L 450,80 L 440,180 M 150,350 L 220,420 M 450,350 L 380,410" />
-      <circle cx="200" cy="80" r="5" fill="#FF4FA3" />
+      <circle cx="200" cy="80" r="5" fill="#ef155e" />
       <circle cx="240" cy="140" r="5" fill="#8B5CF6" />
       <circle cx="450" cy="80" r="5" fill="#C4B5FD" />
     </g>
@@ -73,7 +73,7 @@ export const HeroAIWomanIllustration = () => (
     {/* Coder Woman character */}
     <g transform="translate(250, 150)">
       {/* Torso / Shirt */}
-      <path d="M -30,60 C -30,30 30,30 30,60 L 20,100 L -20,100 Z" fill="#FF4FA3" stroke={strokeColor} strokeWidth={strokeWidth} />
+      <path d="M -30,60 C -30,30 30,30 30,60 L 20,100 L -20,100 Z" fill="#ef155e" stroke={strokeColor} strokeWidth={strokeWidth} />
       {/* Head & Hair */}
       <CharacterFace skinColor="#FFE6F2" hairType="bun" hairColor="#8B5CF6" />
       {/* Arms extended to laptop */}
@@ -88,7 +88,7 @@ export const HeroAIWomanIllustration = () => (
       <rect x="25" y="12" width="50" height="20" rx="2" fill="#F4EEFF" />
       {/* Glowing screen lines */}
       <line x1="30" y1="18" x2="60" y2="18" stroke="#8B5CF6" strokeWidth="2.5" />
-      <line x1="30" y1="24" x2="70" y2="24" stroke="#FF4FA3" strokeWidth="2" />
+      <line x1="30" y1="24" x2="70" y2="24" stroke="#ef155e" strokeWidth="2" />
     </g>
 
     {/* Floating AI Icons */}
@@ -111,7 +111,7 @@ export const HeroAIWomanIllustration = () => (
     {/* Rocket */}
     <g transform="translate(490, 280)" className="float-animation" style={{ animationDelay: '1.4s' }}>
       <rect x="-20" y="-20" width="40" height="40" rx="10" fill="white" stroke={strokeColor} strokeWidth={strokeWidth} />
-      <polygon points="0,-10 5,2 0,5 -5,2" fill="#FF4FA3" stroke={strokeColor} strokeWidth="1.5" />
+      <polygon points="0,-10 5,2 0,5 -5,2" fill="#ef155e" stroke={strokeColor} strokeWidth="1.5" />
     </g>
   </svg>
 );
@@ -128,13 +128,13 @@ export const AboutIllustration = () => (
     <line x1="240" y1="230" x2="210" y2="350" stroke={strokeColor} strokeWidth={strokeWidth} />
     <line x1="360" y1="230" x2="390" y2="350" stroke={strokeColor} strokeWidth={strokeWidth} />
     {/* Chart on whiteboard */}
-    <path d="M 230,180 L 270,140 L 320,160 L 370,110" fill="none" stroke="#FF4FA3" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M 230,180 L 270,140 L 320,160 L 370,110" fill="none" stroke="#ef155e" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
     <circle cx="270" cy="140" r="4" fill="#C4B5FD" stroke={strokeColor} strokeWidth="1.5" />
     <circle cx="370" cy="110" r="4" fill="#8B5CF6" stroke={strokeColor} strokeWidth="1.5" />
 
     {/* Collaborator Left (Pointing) */}
     <g transform="translate(140, 240)">
-      <path d="M -30,60 C -30,30 30,30 30,60 L 20,110 L -20,110 Z" fill="#FF4FA3" stroke={strokeColor} strokeWidth={strokeWidth} />
+      <path d="M -30,60 C -30,30 30,30 30,60 L 20,110 L -20,110 Z" fill="#ef155e" stroke={strokeColor} strokeWidth={strokeWidth} />
       <CharacterFace skinColor="#FFE6F2" hairType="bob" hairColor="#8B5CF6" />
       {/* Hand pointing to board */}
       <path d="M15,40 Q40,20 60,30" fill="none" stroke="#FFE6F2" strokeWidth="7" strokeLinecap="round" />
@@ -171,7 +171,7 @@ export const WhyAttendIllustration = () => (
 
     {/* Student Left */}
     <g transform="translate(130, 250)">
-      <path d="M -30,60 C -30,30 30,30 30,60 L 25,110 L -25,110 Z" fill="#FF4FA3" stroke={strokeColor} strokeWidth={strokeWidth} />
+      <path d="M -30,60 C -30,30 30,30 30,60 L 25,110 L -25,110 Z" fill="#ef155e" stroke={strokeColor} strokeWidth={strokeWidth} />
       <CharacterFace skinColor="#FFE6F2" hairType="bun" hairColor="#8B5CF6" />
       <path d="M12,45 Q35,35 55,42" fill="none" stroke="#FFE6F2" strokeWidth="8" strokeLinecap="round" />
       <path d="M12,45 Q35,35 55,42" fill="none" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
@@ -196,7 +196,7 @@ export const WorkshopsIllustration = () => (
     <rect x="180" y="60" width="240" height="140" rx="8" fill="white" stroke={strokeColor} strokeWidth={strokeWidth} />
     <rect x="195" y="75" width="210" height="110" rx="4" fill="#1E0F30" />
     {/* Coding lines on screen */}
-    <line x1="210" y1="95" x2="300" y2="95" stroke="#FF4FA3" strokeWidth="3" strokeLinecap="round" />
+    <line x1="210" y1="95" x2="300" y2="95" stroke="#ef155e" strokeWidth="3" strokeLinecap="round" />
     <line x1="210" y1="110" x2="340" y2="110" stroke="#8B5CF6" strokeWidth="3" strokeLinecap="round" />
     <line x1="230" y1="125" x2="310" y2="125" stroke="#C4B5FD" strokeWidth="3" strokeLinecap="round" />
 
@@ -205,7 +205,7 @@ export const WorkshopsIllustration = () => (
 
     {/* Mentor (Standing Left pointing to screen) */}
     <g transform="translate(120, 220)">
-      <path d="M -30,60 C -30,30 30,30 30,60 L 25,120 L -25,120 Z" fill="#FF4FA3" stroke={strokeColor} strokeWidth={strokeWidth} />
+      <path d="M -30,60 C -30,30 30,30 30,60 L 25,120 L -25,120 Z" fill="#ef155e" stroke={strokeColor} strokeWidth={strokeWidth} />
       <CharacterFace skinColor="#FFE6F2" hairType="bun" hairColor="#8B5CF6" />
       {/* Arm pointing */}
       <path d="M15,40 Q40,10 65,22" fill="none" stroke="#FFE6F2" strokeWidth="7" strokeLinecap="round" />
@@ -234,7 +234,7 @@ export const MentorsIllustration = () => (
     {/* Mentor (Center back) */}
     <g transform="translate(300, 180)">
       <path d="M -30,60 C -30,30 30,30 30,60 L 20,120 L -20,120 Z" fill="#8B5CF6" stroke={strokeColor} strokeWidth={strokeWidth} />
-      <CharacterFace skinColor="#FFE6F2" hairType="bun" hairColor="#FF4FA3" />
+      <CharacterFace skinColor="#FFE6F2" hairType="bun" hairColor="#ef155e" />
       {/* Arms out wide guiding */}
       <path d="M-25,45 Q-60,55 -80,75" fill="none" stroke="#FFE6F2" strokeWidth="7" strokeLinecap="round" />
       <path d="M-25,45 Q-60,55 -80,75" fill="none" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
@@ -247,7 +247,7 @@ export const MentorsIllustration = () => (
 
     {/* Student Left */}
     <g transform="translate(180, 270)">
-      <path d="M -25,50 C -25,25 25,25 25,50 L 15,100 L -15,100 Z" fill="#FF4FA3" stroke={strokeColor} strokeWidth={strokeWidth} />
+      <path d="M -25,50 C -25,25 25,25 25,50 L 15,100 L -15,100 Z" fill="#ef155e" stroke={strokeColor} strokeWidth={strokeWidth} />
       <CharacterFace skinColor="#FFE6F2" hairType="bob" hairColor="#1A0C2C" />
     </g>
 
@@ -270,7 +270,7 @@ export const NetworkingIllustration = () => (
     <line x1="260" y1="400" x2="340" y2="400" stroke={strokeColor} strokeWidth={strokeWidth} />
 
     {/* Coffee Mug */}
-    <rect x="290" y="295" width="20" height="25" rx="4" fill="#FF4FA3" stroke={strokeColor} strokeWidth={2} />
+    <rect x="290" y="295" width="20" height="25" rx="4" fill="#ef155e" stroke={strokeColor} strokeWidth={2} />
     <path d="M 310,300 Q 318,307 310,315" fill="none" stroke={strokeColor} strokeWidth="2" />
 
     {/* Person Left */}
@@ -284,7 +284,7 @@ export const NetworkingIllustration = () => (
 
     {/* Person Right */}
     <g transform="translate(450, 240)">
-      <path d="M -30,60 C -30,30 30,30 30,60 L 25,120 L -25,120 Z" fill="#FF4FA3" stroke={strokeColor} strokeWidth={strokeWidth} />
+      <path d="M -30,60 C -30,30 30,30 30,60 L 25,120 L -25,120 Z" fill="#ef155e" stroke={strokeColor} strokeWidth={strokeWidth} />
       <CharacterFace skinColor="#FFE6F2" hairType="wavy" hairColor="#1A0C2C" />
       {/* Hand gesturing */}
       <path d="M-20,50 Q-40,40 -60,45" fill="none" stroke="#FFE6F2" strokeWidth="7" strokeLinecap="round" />
@@ -296,7 +296,7 @@ export const NetworkingIllustration = () => (
       <rect x="-40" y="-20" width="80" height="40" rx="12" fill="white" stroke={strokeColor} strokeWidth={strokeWidth} />
       <polygon points="0,20 -10,30 -5,20" fill="white" stroke={strokeColor} strokeWidth={strokeWidth} />
       {/* Inner AI Nodes symbol */}
-      <circle cx="-12" cy="0" r="4" fill="#FF4FA3" />
+      <circle cx="-12" cy="0" r="4" fill="#ef155e" />
       <circle cx="12" cy="0" r="4" fill="#8B5CF6" />
       <line x1="-8" y1="0" x2="8" y2="0" stroke={strokeColor} strokeWidth="1.5" />
     </g>
@@ -311,7 +311,7 @@ export const StartupShowcaseIllustration = () => (
     {/* Presentation Screen background */}
     <rect x="150" y="50" width="300" height="160" rx="10" fill="#F4EEFF" stroke={strokeColor} strokeWidth={strokeWidth} />
     {/* Rocket launch inside showcase screen */}
-    <path d="M 300,100 L 315,140 L 300,148 L 285,140 Z" fill="#FF4FA3" stroke={strokeColor} strokeWidth="1.5" />
+    <path d="M 300,100 L 315,140 L 300,148 L 285,140 Z" fill="#ef155e" stroke={strokeColor} strokeWidth="1.5" />
     <path d="M 300,148 L 290,165 M 300,148 L 310,165" stroke={strokeColor} strokeWidth="2" />
     <text x="300" y="190" fontSize="12" fontWeight="bold" fill={strokeColor} textAnchor="middle">LAUNCH PITCH</text>
 
@@ -321,7 +321,7 @@ export const StartupShowcaseIllustration = () => (
     {/* Founder (Standing pointing to screen) */}
     <g transform="translate(200, 220)">
       <path d="M -30,60 C -30,30 30,30 30,60 L 25,110 L -25,110 Z" fill="#8B5CF6" stroke={strokeColor} strokeWidth={strokeWidth} />
-      <CharacterFace skinColor="#FFE6F2" hairType="bun" hairColor="#FF4FA3" />
+      <CharacterFace skinColor="#FFE6F2" hairType="bun" hairColor="#ef155e" />
       <path d="M15,45 Q45,25 60,35" fill="none" stroke="#FFE6F2" strokeWidth="7" strokeLinecap="round" />
       <path d="M15,45 Q45,25 60,35" fill="none" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
     </g>
@@ -350,7 +350,7 @@ export const PanelDiscussionIllustration = () => (
     {/* Chairs and Panelists (Standing/Sitting) */}
     {/* Panelist 1 */}
     <g transform="translate(180, 220)">
-      <path d="M -20,50 C -20,25 20,25 20,50 L 15,100 L -15,100 Z" fill="#FF4FA3" stroke={strokeColor} strokeWidth={strokeWidth} />
+      <path d="M -20,50 C -20,25 20,25 20,50 L 15,100 L -15,100 Z" fill="#ef155e" stroke={strokeColor} strokeWidth={strokeWidth} />
       <CharacterFace skinColor="#FFE6F2" hairType="bun" hairColor="#8B5CF6" />
     </g>
 
@@ -368,7 +368,7 @@ export const PanelDiscussionIllustration = () => (
 
     {/* Panelist 4 */}
     <g transform="translate(420, 220)">
-      <path d="M -20,50 C -20,25 20,25 20,50 L 15,100 L -15,100 Z" fill="#FF4FA3" stroke={strokeColor} strokeWidth={strokeWidth} />
+      <path d="M -20,50 C -20,25 20,25 20,50 L 15,100 L -15,100 Z" fill="#ef155e" stroke={strokeColor} strokeWidth={strokeWidth} />
       <CharacterFace skinColor="#FFE6F2" hairType="bun" hairColor="#1A0C2C" />
     </g>
 
@@ -388,7 +388,7 @@ export const VolunteersIllustration = () => (
 
     {/* Registration Counter */}
     <rect x="140" y="280" width="320" height="60" rx="8" fill="white" stroke={strokeColor} strokeWidth={strokeWidth} />
-    <text x="300" y="315" fontSize="13" fontWeight="bold" fill="#FF4FA3" textAnchor="middle">REGISTRATION DESK</text>
+    <text x="300" y="315" fontSize="13" fontWeight="bold" fill="#ef155e" textAnchor="middle">REGISTRATION DESK</text>
 
     {/* Volunteer Left (Giving badge) */}
     <g transform="translate(220, 180)">
@@ -401,7 +401,7 @@ export const VolunteersIllustration = () => (
 
     {/* Volunteer Right (Helping/Gesturing) */}
     <g transform="translate(380, 180)">
-      <path d="M -25,50 C -25,25 25,25 25,50 L 20,110 L -20,110 Z" fill="#FF4FA3" stroke={strokeColor} strokeWidth={strokeWidth} />
+      <path d="M -25,50 C -25,25 25,25 25,50 L 20,110 L -20,110 Z" fill="#ef155e" stroke={strokeColor} strokeWidth={strokeWidth} />
       <CharacterFace skinColor="#FFE6F2" hairType="bob" hairColor="#1A0C2C" />
       <path d="M-15,42 Q-35,35 -40,50" fill="none" stroke="#FFE6F2" strokeWidth="7" strokeLinecap="round" />
       <path d="M-15,42 Q-35,35 -40,50" fill="none" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
@@ -430,7 +430,7 @@ export const RegistrationIllustration = () => (
 
     {/* Coder scanning ticket (Left side arm) */}
     <g transform="translate(130, 240)">
-      <path d="M -35,60 C -35,30 35,30 35,60 L 25,120 L -25,120 Z" fill="#FF4FA3" stroke={strokeColor} strokeWidth={strokeWidth} />
+      <path d="M -35,60 C -35,30 35,30 35,60 L 25,120 L -25,120 Z" fill="#ef155e" stroke={strokeColor} strokeWidth={strokeWidth} />
       <CharacterFace skinColor="#FFE6F2" hairType="bun" hairColor="#8B5CF6" />
       {/* Hand holding phone to scan */}
       <path d="M15,45 Q40,35 65,40" fill="none" stroke="#FFE6F2" strokeWidth="8" strokeLinecap="round" />
@@ -444,7 +444,7 @@ export const RegistrationIllustration = () => (
 // 11. Venue Map Illustration: Buildings, roads, pins
 export const VenueMapIllustration = ({ activeHall = 'main', onSelectHall = () => {} }) => {
   const halls = [
-    { id: 'main', label: 'Main stage', x: 200, y: 110, color: '#FF4FA3', icon: 'main' },
+    { id: 'main', label: 'Main stage', x: 200, y: 110, color: '#ef155e', icon: 'main' },
     { id: 'workshop', label: 'Tech Lab', x: 130, y: 220, color: '#8B5CF6', icon: 'lab' },
     { id: 'lounge', label: 'Cafe Area', x: 270, y: 220, color: '#C4B5FD', icon: 'lounge' }
   ];
@@ -510,9 +510,9 @@ export const FAQAssistantIllustration = () => (
       <path d="M-8,8 Q0,14 8,8" fill="none" stroke={strokeColor} strokeWidth={2} strokeLinecap="round" />
       
       {/* Headphones */}
-      <path d="M-34,-10 C-34,-42 34,-42 34,-10" fill="none" stroke="#FF4FA3" strokeWidth="4" />
-      <rect x="-38" y="-12" width="10" height="16" rx="4" fill="#FF4FA3" />
-      <rect x="28" y="-12" width="10" height="16" rx="4" fill="#FF4FA3" />
+      <path d="M-34,-10 C-34,-42 34,-42 34,-10" fill="none" stroke="#ef155e" strokeWidth="4" />
+      <rect x="-38" y="-12" width="10" height="16" rx="4" fill="#ef155e" />
+      <rect x="28" y="-12" width="10" height="16" rx="4" fill="#ef155e" />
       
       {/* Body / Stand */}
       <rect x="-10" y="20" width="20" height="15" fill="#C4B5FD" stroke={strokeColor} strokeWidth={strokeWidth} />
@@ -528,14 +528,14 @@ export const FinalCTAIllustration = () => (
 
     {/* Rocket launching in background */}
     <g transform="translate(300, 120)" className="float-animation">
-      <path d="M-10,15 Q0,45 10,15 Z" fill="#FF4FA3" />
+      <path d="M-10,15 Q0,45 10,15 Z" fill="#ef155e" />
       <polygon points="0,-40 12,10 0,5 -12,10" fill="#8B5CF6" stroke={strokeColor} strokeWidth="2" />
       <circle cx="0" cy="-5" r="4" fill="white" stroke={strokeColor} strokeWidth="1.5" />
     </g>
 
     {/* Person Left celebrating */}
     <g transform="translate(180, 260)">
-      <path d="M -30,60 C -30,30 30,30 30,60 L 25,120 L -25,120 Z" fill="#FF4FA3" stroke={strokeColor} strokeWidth={strokeWidth} />
+      <path d="M -30,60 C -30,30 30,30 30,60 L 25,120 L -25,120 Z" fill="#ef155e" stroke={strokeColor} strokeWidth={strokeWidth} />
       <CharacterFace skinColor="#FFE6F2" hairType="bun" hairColor="#8B5CF6" />
       {/* Arms in air */}
       <path d="M-20,40 Q-45,15 -50,5" fill="none" stroke="#FFE6F2" strokeWidth="7" strokeLinecap="round" />
@@ -556,13 +556,13 @@ export const FinalCTAIllustration = () => (
     {/* Person Right celebrating */}
     <g transform="translate(420, 260)">
       <path d="M -30,60 C -30,30 30,30 30,60 L 25,120 L -25,120 Z" fill="#8B5CF6" stroke={strokeColor} strokeWidth={strokeWidth} />
-      <CharacterFace skinColor="#FFE6F2" hairType="wavy" hairColor="#FF4FA3" />
+      <CharacterFace skinColor="#FFE6F2" hairType="wavy" hairColor="#ef155e" />
       <path d="M20,40 Q45,15 50,5" fill="none" stroke="#FFE6F2" strokeWidth="7" strokeLinecap="round" />
       <path d="M20,40 Q45,15 50,5" fill="none" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" />
     </g>
 
     {/* Confetti specs */}
-    <circle cx="150" cy="180" r="4" fill="#FF4FA3" />
+    <circle cx="150" cy="180" r="4" fill="#ef155e" />
     <circle cx="450" cy="180" r="4" fill="#8B5CF6" />
     <rect x="220" y="160" width="8" height="8" fill="#C4B5FD" transform="rotate(45 220 160)" />
     <rect x="380" y="160" width="8" height="8" fill="#FFE6F2" transform="rotate(30 380 160)" />
@@ -576,7 +576,7 @@ export const AvatarVector = ({ type = 'female-ai', size = 64, ...props }) => {
       case 'female-ai':
         return { skin: '#FFE6F2', hairType: 'bun', hairColor: '#8B5CF6' };
       case 'founder':
-        return { skin: '#FFE6F2', hairType: 'bob', hairColor: '#FF4FA3' };
+        return { skin: '#FFE6F2', hairType: 'bob', hairColor: '#ef155e' };
       case 'data-scientist':
         return { skin: '#FFE6F2', hairType: 'wavy', hairColor: '#1A0C2C' };
       case 'ux-designer':
@@ -604,7 +604,7 @@ export const AvatarVector = ({ type = 'female-ai', size = 64, ...props }) => {
 export const RocketLaunchIllustration = () => (
   <svg viewBox="0 0 120 120" width="100" height="100" style={{ overflow: 'visible' }}>
     <g transform="translate(60, 60)" className="float-animation">
-      <path d="M-15,10 Q0,45 15,10 Z" fill="#FF4FA3" />
+      <path d="M-15,10 Q0,45 15,10 Z" fill="#ef155e" />
       <path d="M-8,10 Q0,30 8,10 Z" fill="#8B5CF6" />
       <path d="M-8,-10 L-25,12 L-8,12 Z" fill="#C4B5FD" stroke={strokeColor} strokeWidth={1.5} />
       <path d="M8,-10 L25,12 L8,12 Z" fill="#C4B5FD" stroke={strokeColor} strokeWidth={1.5} />
