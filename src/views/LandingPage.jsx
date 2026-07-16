@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy } from 'react';
 import {
   Calendar, MapPin, Clock, Users, Star, HelpCircle,
   ChevronDown, ChevronUp, Play, Sparkles, Award, Compass,
@@ -8,15 +8,13 @@ import {
 import GlassCard from '../components/GlassCard';
 import vrGirlImage from '../assets/vr-girl.webp';
 import { showToast } from '../components/Toast';
-import AttendingFrameGenerator from '../components/AttendingFrameGenerator';
-import CrowdCanvas from '../components/CrowdCanvas';
 import NumberFlow from '@number-flow/react';
 import ScrollScatterText from '../components/ScrollScatterText';
 import ScrollScatterGroup from '../components/ScrollScatterGroup';
 import ScrollReveal from '../components/ScrollReveal';
 import ScrollSection from '../components/ScrollSection';
+import DeferUntilVisible from '../components/DeferUntilVisible';
 import usePauseOffscreenAnimations from '../components/usePauseOffscreenAnimations';
-import EventGallery from '../components/EventGallery';
 import BackgroundGradient from '../components/BackgroundGradient';
 import HoverBorderGradient from '../components/HoverBorderGradient';
 import BackgroundLines from '../components/BackgroundLines';
@@ -175,6 +173,15 @@ const FAQS = [
   { q: 'Will I get a certificate?', a: 'Yes, every attendee who completes the sessions and verifies check-in will receive a digital certificate of participation.' },
   { q: 'Is there a physical venue or is it virtual?', a: 'It is a hybrid event! You can join us physically at the main auditorium in Madurai or connect virtually using this platform.' }
 ];
+
+/*
+ * Below-fold and mounted on scroll, so their code stays out of the initial
+ * bundle. CrowdCanvas matters most: it is the only thing that pulls in gsap,
+ * and it sits at the very foot of the page.
+ */
+const CrowdCanvas = lazy(() => import('../components/CrowdCanvas'));
+const EventGallery = lazy(() => import('../components/EventGallery'));
+const AttendingFrameGenerator = lazy(() => import('../components/AttendingFrameGenerator'));
 
 export default function LandingPage() {
   usePauseOffscreenAnimations();
@@ -390,15 +397,19 @@ export default function LandingPage() {
               {/* Backing decorative circles to match poster layout */}
               <div className="spin-slow" style={{ position: 'absolute', width: '520px', height: '520px', borderRadius: '50%', border: '1.5px dashed var(--color-pink)', opacity: 0.5, zIndex: 0 }} />
               
-              <div style={{ position: 'relative', zIndex: 1 }}>
+              <div className="hero-image-wrap" style={{ position: 'relative', zIndex: 1 }}>
                 <img
                   src={vrGirlImage}
                   alt="PenmAI 2.0 VR Girl"
                   className="float-animation"
                   // This is the LCP element: load it eagerly at high priority and
                   // give intrinsic dimensions so it reserves space without shifting.
+                  // These MUST match the file's real aspect ratio (1100x1234).
+                  // With `height: auto`, the browser reserves a box from this
+                  // ratio and then reflows to the true one once decoded — a wrong
+                  // guess here shifts the whole hero on load.
                   width="440"
-                  height="440"
+                  height="494"
                   fetchPriority="high"
                   decoding="async"
                   style={{ width: '100%', height: 'auto', maxWidth: '440px', display: 'block', objectFit: 'contain' }}
@@ -517,7 +528,7 @@ export default function LandingPage() {
                 <GlassCard interactive={true} style={{ padding: '0', overflow: 'hidden', display: 'flex', flexDirection: 'column', borderRadius: '20px', background: 'white' }}>
                   <GlowingEffect />
                   <div className="theme-card-image-container">
-                    <img src={theme.image} alt={theme.name} className="theme-card-image" loading="lazy" decoding="async" width="880" height="360" />
+                    <img src={theme.image} alt={theme.name} className="theme-card-image" loading="lazy" decoding="async" />
                     <div style={{ position: 'absolute', bottom: 12, left: 12, display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                       {theme.tags.map((tag, idx) => (
                         <span key={idx} style={{ fontSize: '9px', background: 'rgba(255, 255, 255, 0.95)', color: 'var(--color-pink)', padding: '3px 10px', borderRadius: '6px', fontWeight: '800', border: '1px solid rgba(239, 21, 94, 0.15)' }}>
@@ -582,7 +593,7 @@ export default function LandingPage() {
               <p style={{ color: 'var(--color-text-secondary)' }}>A look back at the community we have built together</p>
             </div>
           </ScrollReveal>
-          <EventGallery />
+          <DeferUntilVisible className="defer-gallery"><EventGallery /></DeferUntilVisible>
         </div>
       </ScrollSection>
 
@@ -764,7 +775,7 @@ export default function LandingPage() {
           <ScrollReveal direction="up" delay={150}>
             <div className="glass-premium" style={{ padding: '40px' }}>
               <GlowingEffect />
-              <AttendingFrameGenerator />
+              <DeferUntilVisible className="defer-frame"><AttendingFrameGenerator /></DeferUntilVisible>
             </div>
           </ScrollReveal>
         </div>
@@ -1015,7 +1026,7 @@ export default function LandingPage() {
 
           {/* Bottom girls walking crowd animation */}
           <div style={{ marginTop: '48px', height: '220px', width: '100%', position: 'relative', overflow: 'hidden', borderTop: '1px solid rgba(239, 21, 94, 0.08)' }}>
-            <CrowdCanvas rows={4} cols={4} />
+            <DeferUntilVisible className="defer-crowd"><CrowdCanvas rows={4} cols={4} /></DeferUntilVisible>
           </div>
         </div>
       </ScrollSection>

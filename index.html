@@ -5,6 +5,21 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PenmAI 2.0 - Women Techmakers Initiative 2026</title>
+
+    <!--
+      Fonts are linked here rather than @import-ed from index.css. An @import is
+      only discovered after the CSS has downloaded and parsed, which puts an
+      extra serialized round trip on the critical path before first paint.
+      Preconnect warms both origins (CSS from googleapis, woff2 from gstatic)
+      while the HTML is still parsing.
+      Weights are limited to those actually used: 400 body, 500/600/700/800.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap"
+    />
   </head>
   <body>
     <div id="root"></div>

@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Sora:wght@300;400;500;600;700;800&display=swap');
+/* Fonts are loaded via <link rel="preconnect"> + <link rel="stylesheet"> in
+   index.html — an @import here would be render-blocking and add a round trip. */
 
 :root {
   --color-pink: #ef155e;
@@ -494,6 +495,49 @@ button {
 }
 
 /* Responsive Timeline Styles */
+/*
+ * The hero image is the LCP element, and its wrapper is a flex item — so until
+ * the image loads the item is shrink-to-fit and its width is indeterminate.
+ * The img's `width: 100%` then resolves against nothing, the aspect-ratio box
+ * is reserved too small (159x178 instead of 260x292), and the hero grows on
+ * load, shoving the whole page down. A definite width makes the reservation
+ * exact; the auto margins keep the image centred as the flex parent used to.
+ */
+.hero-image-wrap {
+  width: 100%;
+}
+
+.hero-image-wrap > img {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Height reservations for below-fold components that mount on scroll (see
+   DeferUntilVisible). These must match the real rendered heights, measured at
+   each breakpoint — an unreserved placeholder shifts the page on swap and CLS
+   goes straight back up. */
+.defer-gallery {
+  height: 440px;
+}
+
+.defer-frame {
+  min-height: 649px;
+}
+
+.defer-crowd {
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+  .defer-gallery {
+    height: 300px;
+  }
+
+  .defer-frame {
+    min-height: 868px;
+  }
+}
+
 /* Infinite animations are paused while off-screen (see
    usePauseOffscreenAnimations). Covers ::after so the heading shimmer stops too —
    a pseudo-element cannot be reached from JS. */
